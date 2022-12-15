@@ -1,9 +1,18 @@
 ﻿using EcommerceMVC.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceMVC.Data
 {
-    public class Product : BaseEntity
+	public class Category : BaseEntity
+	{
+#nullable disable
+        [Required]
+		public string Name { get; set; }
+		public int DisplayOrder { get; set; }
+	}
+
+	public class Product : BaseEntity
     {
         public string? ProductImage { get; set; }
 #nullable disable
@@ -13,7 +22,7 @@ namespace EcommerceMVC.Data
 
         // One-to-one relationship: Each item belong to a category
         //[ForeignKey("CategoryId")]
-        public ProductCategoryEnum ProductCategory { get; set; } //FK
+        //public ProductCategoryEnum ProductCategory { get; set; } //FK
 
 
         public bool IsAvailable { get; set; }
