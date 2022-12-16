@@ -10,7 +10,7 @@ namespace Ecommerce.Infrastructure.Services.Interface
 {
 	public interface ICategoryRepository
 	{
-		Task<List<Category>> GetAllCategoriesAsync();
+		Task<IEnumerable<Category>> GetAllCategoriesAsync();
 		Task<Category> GetIdAsync(long id);
 		Task<int> GetCountAsync();
 		bool Add(Category category);

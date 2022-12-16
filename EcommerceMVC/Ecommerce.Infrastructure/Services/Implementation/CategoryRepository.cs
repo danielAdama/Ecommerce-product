@@ -30,7 +30,7 @@ namespace Ecommerce.Infrastructure.Services.Implementation
 			return Save();
 		}
 
-		public async Task<List<Category>> GetAllCategoriesAsync()
+		public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
 		{
 			return await _context.Categories.AsNoTracking().ToListAsync();
 		}
