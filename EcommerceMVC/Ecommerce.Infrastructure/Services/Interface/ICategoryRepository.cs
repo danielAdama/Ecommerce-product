@@ -1,4 +1,5 @@
 ﻿using EcommerceMVC.Data;
+using EcommerceMVC.Services.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Infrastructure.Services.Interface
 {
-	public interface ICategoryRepository : IRepository<Category>
+	public interface ICategoryRepository
 	{
-		void Update(Category obj);
+		Task<List<Category>> GetAllCategoriesAsync();
+		Task<Category> GetIdAsync(long id);
+		Task<int> GetCountAsync();
+		bool Add(Category category);
+		bool Update(Category category);
+		bool Delete(Category category);
+		bool Save();
 	}
 }

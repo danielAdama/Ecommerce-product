@@ -11,6 +11,7 @@ namespace EcommerceMVC.Services.Infrastructure.Persistence
 		{ }
 
 		public DbSet<Category> Categories { get; set; }
+		public DbSet<Product> Products { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

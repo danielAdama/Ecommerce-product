@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EcommerceMVC.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,16 @@ namespace EcommerceMVC.Services.Infrastructure.Persistence
 
 		public static void Seed(this ModelBuilder modelBuilder)
 		{
+			modelBuilder.Entity<Category>()
+			   .HasData(
+			   new Category
+			   {
+				   Id = 1,
+				   Name = "Asus Alienware",
+				   DisplayOrder = 1,
+				   TimeUpdated = DateTimeOffset.UtcNow,
+				   TimeCreated = DateTimeOffset.UtcNow
+			   });
 		}
 	}
 }

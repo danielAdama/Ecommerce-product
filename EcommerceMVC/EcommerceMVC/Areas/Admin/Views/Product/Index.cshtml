@@ -1,0 +1,47 @@
+﻿@using EcommerceMVC.Data;
+@model IEnumerable<Category>
+@{
+	ViewData["Title"] = "Product";
+}
+
+<div class="category-table">
+	<div class="card shadow border-0 mb-7">
+		<div class="row align-items-center p-3 m-2">
+			<div class="col-12 mb-4 mb-sm-0 d-flex justify-content-between">
+				<div class="col-6 text-start">
+					<h1 class="text-primary">Product List</h1>
+				</div>
+				<div class="col-6 text-end">
+					<a type="button" class="btn btn-primary" asp-controller="Product" asp-action="Create">
+						<i class="bi bi-plus-circle"></i>&nbsp; Create New Product
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<table class="table table-bordered table-striped" style="width:100%">
+	<thead class="thead-light">
+		<tr>
+			<th scope="col">
+				 Name
+			</th scope="col">
+			<th scope="col">
+				 Description
+			</th scope="col">
+			<th scope="col">
+				 Price
+			</th scope="col">
+			<th scope="col">
+				 Category
+			</th scope="col">
+			<th scope="col">
+				 Available
+			</th scope="col">
+			<th>
+			</th>
+		</tr>
+	</thead>
+
+</table>
