@@ -10,6 +10,5 @@ namespace Ecommerce.Infrastructure.Services.Interface
 	public interface ICategoryRepository : IRepository<Category>
 	{
 		void Update(Category obj);
-		void Save();
 	}
 }
