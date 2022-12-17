@@ -1,10 +1,10 @@
 ﻿@using EcommerceMVC.Data;
 @model Product
 
-<form method="post" asp-action="Upsert">
-	<div class="border p-3 mt-4">
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+	<div class="border p-3 mt-4 row">
 		<div class="row pb-2">
-			<h2 class="text-primary">Edit Product</h2>
+			<h2 class="text-primary">@(Model.Id != 0 ? "Update" : "Create") Product</h2>
 			<hr />
 		</div>
 		<div class="mb-3">
@@ -17,12 +17,12 @@
 			<textarea asp-for ="Description" class="form-control"></textarea>
 			<span asp-validation-for="Description" rows="3" class="text-danger"></span>
 		</div>
-		<div class="mb-3">
+		<div class="mb-3 col-6">
 			<label asp-for="Price"></label>
 			<input asp-for="Price" class="form-control" />
 			<span asp-validation-for="Price" class="text-danger"></span>
 		</div>
-		<div class="mb-3">
+		<div class="mb-3 col-6">
 			<label asp-for="CategoryId"></label>
 			<select asp-for="CategoryId" asp-items="@(ViewData["CategoryList"] as IEnumerable<SelectListItem>)" class="form-select">
 				<option disabled selected>--Select Category--</option>
@@ -30,6 +30,11 @@
 			<span asp-validation-for="CategoryId" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
+			<label asp-for="ImageUrl"></label>
+			<input type="file" id="UploadBox" class="form-control" />
+			<span asp-validation-for="ImageUrl" class="text-danger"></span>
+		</div>
+		@*<div class="mb-3 col-6">
 			<label asp-for="IsAvailable">Available</label>
 			<select id="available" name="available">
 				<option>Available</option>
@@ -37,8 +42,17 @@
 			</select>
 			@*<input asp-for="IsAvailable" class="form-control" />
 			<span asp-validation-for="IsAvailable" class="text-danger"></span>*@
-		</div>
-		<button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+		@*</div>*@
+	</div>
+	<div class="col-12">
+		@if(Model.Id != 0)
+		{
+			<button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+		}
+		else
+		{
+			<button type="submit" onclick="ValidateInput()" class="btn btn-primary" style="width:150px">Create</button>
+		}
 		<a asp-area="Admin" asp-controller="Category" asp-action="Index" class="btn btn-secondary">Back to List</a>
 	</div>
 </form>
@@ -47,5 +61,6 @@
 @section Scripts{
 	@{
 		<partial name="_ValidationScriptsPartial" />
+		<script src="~/js/uploadcheck.js" type="text/javascript"></script>
 	}
 }

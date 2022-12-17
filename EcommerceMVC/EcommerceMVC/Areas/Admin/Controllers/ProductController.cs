@@ -31,16 +31,16 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 
 		public async Task<IActionResult> Upsert(long id)
 		{
+			Product product = new();
 			// Drop down for Category
-			ProductDTO productDTO = new()
-			{
-				Product = new(),
-				CategoryList = (await _categoryRepository.GetAllCategoriesAsync()).Select(x => new SelectListItem
-				{
-					Text = x.Name,
-					Value = x.Id.ToString()
-				}),
-			};
+
+		   IEnumerable <SelectListItem> CategoryList = await _context.Categories.Select(
+			   x => new SelectListItem
+			   {
+				   Text = x.Name,
+				   Value = x.Id.ToString()
+			   }).ToListAsync();
+
 
 			if (id is not 0)
 			{
@@ -50,25 +50,21 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 
 			}
 			// Create product
-			ViewBag.CategoryList = CategoryList;
+			ViewData["CategoryList"] = CategoryList;
 			return View(product);
 		}
 
-		//[HttpPost]
-		//public IActionResult Edit(Category productProperty)
-		//{
-		//	if (productProperty.Name == productProperty.DisplayOrder.ToString())
-		//	{
-		//		ModelState.AddModelError("name", "The DisplayOrder cannot exactly match the Name.");
-		//	}
-		//	if (ModelState.IsValid)
-		//	{
-		//		_categoryRepository.Update(productProperty);
-		//		TempData["Success"] = "Category updated successfully";
-		//		return RedirectToAction("Index");
-		//	}
-		//	return View(productProperty);
-		//}
+		[HttpPost]
+		public IActionResult Edit(Category productProperty, IFormFile file)
+		{
+			if (ModelState.IsValid)
+			{
+				_categoryRepository.Update(productProperty);
+				TempData["Success"] = "Category updated successfully";
+				return RedirectToAction("Index");
+			}
+			return View(productProperty);
+		}
 
 		//public async Task<IActionResult> Delete(long id)
 		//{

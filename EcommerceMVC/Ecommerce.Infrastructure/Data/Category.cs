@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceMVC.Data
@@ -7,6 +8,7 @@ namespace EcommerceMVC.Data
 	{
 #nullable disable
 		public string Name { get; set; }
+		[DisplayName("Display Order")]
 		public int DisplayOrder { get; set; }
 	}
 

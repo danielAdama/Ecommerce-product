@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\js\\site.js"
     },
     {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\js\\uploadcheck.js",
+      "PackagePath": "staticwebassets\\js\\uploadcheck.js"
+    },
+    {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\lib\\bootstrap\\LICENSE",
       "PackagePath": "staticwebassets\\lib\\bootstrap"
     },
