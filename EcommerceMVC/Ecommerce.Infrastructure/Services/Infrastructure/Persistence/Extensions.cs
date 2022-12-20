@@ -26,7 +26,7 @@ namespace EcommerceMVC.Services.Infrastructure.Persistence
 			   new Category
 			   {
 				   Id = 1,
-				   Name = "Asus Alienware",
+				   Name = "Laptop",
 				   DisplayOrder = 1,
 				   TimeUpdated = DateTimeOffset.UtcNow,
 				   TimeCreated = DateTimeOffset.UtcNow

@@ -31,39 +31,72 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 
 		public async Task<IActionResult> Upsert(long id)
 		{
-			Product product = new();
-			// Drop down for Category
-
-		   IEnumerable <SelectListItem> CategoryList = await _context.Categories.Select(
-			   x => new SelectListItem
-			   {
-				   Text = x.Name,
-				   Value = x.Id.ToString()
-			   }).ToListAsync();
+			ProductDTO productDTO = new()
+			{
+				Product = new(),
+				CategoryList = (await _context.Categories.ToListAsync()).Select(x => new SelectListItem
+				{
+					Text = x.Name,
+					Value = x.Id.ToString()
+				})
+			};
 
 
 			if (id is not 0)
 			{
 				// Update product
 				
-				return View(product);
+				return View(productDTO);
 
 			}
 			// Create product
-			ViewData["CategoryList"] = CategoryList;
-			return View(product);
+			return View(productDTO);
 		}
 
 		[HttpPost]
-		public IActionResult Edit(Category productProperty, IFormFile file)
+		public async Task<IActionResult> Upsert(ProductDTO obj, IFormFile file, CancellationToken cancellationToken)
 		{
-			if (ModelState.IsValid)
+			var fileName = Guid.NewGuid().ToString().ToLower();
+			var fileExt = file.FileName.ToString().Split(".")[1];
+			var allowedExt = new string[] { "jpg", "jpeg", "png" };
+			if (!allowedExt.Contains(fileExt))
 			{
-				_categoryRepository.Update(productProperty);
-				TempData["Success"] = "Category updated successfully";
+				TempData["success"] = "Invalid File Extension";
+				RedirectToAction("Index");
+			}
+			var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images\productImg");
+			if (!Directory.Exists(filePath))
+			{
+				Directory.CreateDirectory(filePath);
+			}
+			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			try
+			{
+				string path = $"{filePath}\\{fileName.Replace("-", "")}.{fileExt}";
+				if (file.Length > 0)
+				{
+					obj.Product.ImageUrl = path;
+					using (FileStream stream = new(path, FileMode.Create))
+					{
+						await file.CopyToAsync(stream, cancellationToken);
+					}
+
+					var fileStream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+				}
+				await _context.Products.AddAsync(obj.Product);
+				await _context.SaveChangesAsync(cancellationToken);
+				await transaction.CommitAsync(cancellationToken);
+				TempData["success"] = "Product created successfully";
+
+				return View(obj);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync(cancellationToken);
+				TempData["errorMessage"] = ex.Message;
 				return RedirectToAction("Index");
 			}
-			return View(productProperty);
+
 		}
 
 		//public async Task<IActionResult> Delete(long id)
@@ -89,6 +122,14 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		//	return RedirectToAction("Index");
 		//}
 
+		#region API CALLS
+		[HttpGet]
+		public async Task<IActionResult> GetAll()
+		{
+			var productList = await _context.Products.Include(x => x.Category).AsNoTracking().ToListAsync();
+			return Json(new { data = productList });
+		}
+		#endregion
 
 	}
 

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj": {}
+    "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj": {
+    "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj",
         "projectName": "Ecommerce.Infrastructure",
-        "projectPath": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj",
+        "projectPath": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\Ecommerce.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\obj\\",
+        "outputPath": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\Ecommerce.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -44,6 +44,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "DataTables": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
             "Microsoft.AspNet.Mvc": {
               "target": "Package",
               "version": "[5.2.9, )"
@@ -63,6 +67,10 @@
             "Microsoft.AspNetCore.Mvc.Core": {
               "target": "Package",
               "version": "[2.2.5, )"
+            },
+            "Microsoft.AspNetCore.Mvc.ViewFeatures": {
+              "target": "Package",
+              "version": "[2.2.0, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

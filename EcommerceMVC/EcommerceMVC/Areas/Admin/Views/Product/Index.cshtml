@@ -1,6 +1,4 @@
-﻿@using EcommerceMVC.Data;
-@model IEnumerable<Category>
-@{
+﻿@{
 	ViewData["Title"] = "Product";
 }
 
@@ -21,7 +19,7 @@
 	</div>
 </div>
 
-<table class="table table-bordered table-striped" style="width:100%">
+<table id="tblData" class="table table-bordered table-striped" style="width:100%">
 	<thead class="thead-light">
 		<tr>
 			<th scope="col">
@@ -36,12 +34,11 @@
 			<th scope="col">
 				 Category
 			</th scope="col">
-			<th scope="col">
-				 Available
-			</th scope="col">
 			<th>
+
 			</th>
 		</tr>
 	</thead>
 
 </table>
+<script src="~/js/product.js" type="text/javascript"></script>

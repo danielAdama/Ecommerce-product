@@ -27,8 +27,6 @@ namespace EcommerceMVC.Data
 		//[ForeignKey("CategoryId")]
 		//public ProductCategoryEnum ProductCategory { get; set; } //FK
 
-
-		public bool IsAvailable { get; set; }
 		//public ICollection<Seller> Sellers { get; set; }
 
 	}

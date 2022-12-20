@@ -1,51 +1,41 @@
-﻿@using EcommerceMVC.Data;
-@model Product
+﻿@model Ecommerce.Infrastructure.Data.DTO.ProductDTO;
 
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
 	<div class="border p-3 mt-4 row">
 		<div class="row pb-2">
-			<h2 class="text-primary">@(Model.Id != 0 ? "Update" : "Create") Product</h2>
+			<h2 class="text-primary">@(Model.Product.Id != 0 ? "Update" : "Create") Product</h2>
 			<hr />
 		</div>
 		<div class="mb-3">
-			<label asp-for="Name"></label>
-			<input asp-for="Name" class="form-control" />
-			<span asp-validation-for="Name" class="text-danger"></span>
+			<label asp-for="Product.Name"></label>
+			<input asp-for="Product.Name" class="form-control" />
+			<span asp-validation-for="Product.Name" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
-			<label asp-for="Description"></label>
-			<textarea asp-for ="Description" class="form-control"></textarea>
-			<span asp-validation-for="Description" rows="3" class="text-danger"></span>
+			<label asp-for="Product.Description"></label>
+			<textarea asp-for ="Product.Description" class="form-control"></textarea>
+			<span asp-validation-for="Product.Description" rows="3" class="text-danger"></span>
 		</div>
 		<div class="mb-3 col-6">
-			<label asp-for="Price"></label>
-			<input asp-for="Price" class="form-control" />
-			<span asp-validation-for="Price" class="text-danger"></span>
-		</div>
-		<div class="mb-3 col-6">
-			<label asp-for="CategoryId"></label>
-			<select asp-for="CategoryId" asp-items="@(ViewData["CategoryList"] as IEnumerable<SelectListItem>)" class="form-select">
-				<option disabled selected>--Select Category--</option>
-			</select>
-			<span asp-validation-for="CategoryId" class="text-danger"></span>
-		</div>
-		<div class="mb-3">
-			<label asp-for="ImageUrl"></label>
-			<input type="file" id="UploadBox" class="form-control" />
-			<span asp-validation-for="ImageUrl" class="text-danger"></span>
+			<label asp-for="Product.Price"></label>
+			<input asp-for="Product.Price" class="form-control" />
+			<span asp-validation-for="Product.Price" class="text-danger"></span>
 		</div>
 		@*<div class="mb-3 col-6">
-			<label asp-for="IsAvailable">Available</label>
-			<select id="available" name="available">
-				<option>Available</option>
-				<option>Out of Stock</option>
+			<label asp-for="Product.CategoryId"></label>
+			<select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-select">
+				<option disabled selected>--Select Category--</option>
 			</select>
-			@*<input asp-for="IsAvailable" class="form-control" />
-			<span asp-validation-for="IsAvailable" class="text-danger"></span>*@
-		@*</div>*@
+			<span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+		</div>*@
+		@*<div class="mb-3">
+			<label asp-for="Product.ImageUrl"></label>
+			<input type="file" name="file" id="UploadBox" class="form-control" />
+			<span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
+		</div>*@
 	</div>
 	<div class="col-12">
-		@if(Model.Id != 0)
+		@if(Model.Product.Id != 0)
 		{
 			<button type="submit" class="btn btn-primary" style="width:150px">Update</button>
 		}
