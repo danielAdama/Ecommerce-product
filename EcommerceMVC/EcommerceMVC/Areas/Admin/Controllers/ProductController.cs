@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceMVC.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+	[Area("Admin")]
 	[AutoValidateAntiforgeryToken]
 	public class ProductController : Controller
 	{
@@ -43,7 +43,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			if (id is not 0)
 			{
 				// Update product
-				productDTO.Product = await _context.Products.FirstOrDefaultAsync(x=> x.Id == id);
+				productDTO.Product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
 				return View(productDTO);
 
 			}
@@ -67,8 +67,6 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			{
 				Directory.CreateDirectory(filePath);
 			}
-			var t = Path.Combine(Directory.GetCurrentDirectory(), obj.Product.ImageUrl.TrimStart('\\'));
-			Console.WriteLine(t);
 			if (obj.Product.ImageUrl != null)
 			{
 				var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), obj.Product.ImageUrl.TrimStart('\\'));
@@ -95,12 +93,13 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				{
 					_context.Products.Update(obj.Product);
 				}
-				await _context.Products.AddAsync(obj.Product, cancellationToken);
+				if (obj.Product.Id == 0)
+				{
+					await _context.Products.AddAsync(obj.Product, cancellationToken);
+				}
 				await _context.SaveChangesAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 				TempData["success"] = "Product created successfully";
-
-				return View(obj);
 			}
 			catch (Exception ex)
 			{
@@ -108,7 +107,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				TempData["errorMessage"] = ex.Message;
 				return RedirectToAction("Index");
 			}
-
+			return View(obj);
 		}
 
 		#region API CALLS
@@ -119,11 +118,10 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			return Json(new { data = productList });
 		}
 
-		
-		[HttpPost]
-		public async Task<IActionResult> Delete(long id, CancellationToken cancellationToken)
+		[HttpDelete]
+		public async Task<IActionResult> Delete(long id)
 		{
-			var obj = await _context.Products.FindAsync(id);
+			var obj = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
 
 			if (obj == null)
 			{
@@ -137,7 +135,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			}
 
 			_context.Products.Remove(obj);
-			await _context.SaveChangesAsync(cancellationToken);
+			await _context.SaveChangesAsync();
 			return Json(new { success = true, message = "Deleting Successful" });
 		}
 		#endregion
