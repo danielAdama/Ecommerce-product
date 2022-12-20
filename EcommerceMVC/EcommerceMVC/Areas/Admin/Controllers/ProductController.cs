@@ -24,8 +24,6 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			//IEnumerable<Category> productProperty = await _categoryRepository.GetAllCategoriesAsync();
-			//return View(productProperty);
 			return View();
 		}
 
@@ -45,7 +43,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			if (id is not 0)
 			{
 				// Update product
-				
+				productDTO.Product = await _context.Products.FirstOrDefaultAsync(x=> x.Id == id);
 				return View(productDTO);
 
 			}
@@ -69,10 +67,20 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			{
 				Directory.CreateDirectory(filePath);
 			}
+			var t = Path.Combine(Directory.GetCurrentDirectory(), obj.Product.ImageUrl.TrimStart('\\'));
+			Console.WriteLine(t);
+			if (obj.Product.ImageUrl != null)
+			{
+				var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), obj.Product.ImageUrl.TrimStart('\\'));
+				if (System.IO.File.Exists(oldImagePath))
+				{
+					System.IO.File.Delete(oldImagePath);
+				}
+			}
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				string path = $"{filePath}\\{fileName.Replace("-", "")}.{fileExt}";
+				string path = $"{@"wwwroot\images\productImg\"}{fileName}.{fileExt}";
 				if (file.Length > 0)
 				{
 					obj.Product.ImageUrl = path;
@@ -83,7 +91,11 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 
 					var fileStream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 				}
-				await _context.Products.AddAsync(obj.Product);
+				if (obj.Product.Id != 0)
+				{
+					_context.Products.Update(obj.Product);
+				}
+				await _context.Products.AddAsync(obj.Product, cancellationToken);
 				await _context.SaveChangesAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 				TempData["success"] = "Product created successfully";
@@ -99,35 +111,34 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 
 		}
 
-		//public async Task<IActionResult> Delete(long id)
-		//{
-		//	Category category = await _categoryRepository.GetIdAsync(id);
-
-		//	if (category == null)
-		//	{
-		//		return NotFound();
-		//	}
-		//	return View(category);
-		//}
-		//[HttpPost]
-		//public async Task<IActionResult> DeletePOST(long id)
-		//{
-		//	Category productProperty = await _categoryRepository.GetIdAsync(id);
-		//	if (productProperty == null)
-		//	{
-		//		return NotFound();
-		//	}
-		//	_categoryRepository.Delete(productProperty);
-		//	TempData["Success"] = "Category deleted successfully";
-		//	return RedirectToAction("Index");
-		//}
-
 		#region API CALLS
 		[HttpGet]
 		public async Task<IActionResult> GetAll()
 		{
 			var productList = await _context.Products.Include(x => x.Category).AsNoTracking().ToListAsync();
 			return Json(new { data = productList });
+		}
+
+		
+		[HttpPost]
+		public async Task<IActionResult> Delete(long id, CancellationToken cancellationToken)
+		{
+			var obj = await _context.Products.FindAsync(id);
+
+			if (obj == null)
+			{
+				return Json(new { success = false, message = "Error while deleting" });
+			}
+
+			var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), obj.ImageUrl.TrimStart('\\'));
+			if (System.IO.File.Exists(oldImagePath))
+			{
+				System.IO.File.Delete(oldImagePath);
+			}
+
+			_context.Products.Remove(obj);
+			await _context.SaveChangesAsync(cancellationToken);
+			return Json(new { success = true, message = "Deleting Successful" });
 		}
 		#endregion
 

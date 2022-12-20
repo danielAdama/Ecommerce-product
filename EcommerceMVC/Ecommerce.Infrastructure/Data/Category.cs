@@ -20,6 +20,7 @@ namespace EcommerceMVC.Data
 		public double Price { get; set; }
 		public string ImageUrl { get; set; }
 
+		[Display(Name ="Category")]
 		public long CategoryId { get; set; }
 		public Category Category { get; set; }
 

@@ -13,9 +13,11 @@
                 "render": function (data) {
                     return `
                             <div class="w-75 btn-group" role="group">
-                                <a href="/admin/product/upsert?id=${data}" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> edit</a>
-              <a asp-area="admin" asp-controller="category" asp-action="delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2"><i class="bi bi-trash3-fill"></i> delete</a>
-             </div>
+                                <a href="/Admin/Product/Upsert?id=${data}" 
+                                class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i> Edit</a>
+                                <a asp-area="Sdmin" asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Id" 
+                                class="btn btn-danger mx-2"><i class="bi bi-trash3-fill"></i> Delete</a>
+                            </div>
                             `
                 },
                 "width": "15%"
