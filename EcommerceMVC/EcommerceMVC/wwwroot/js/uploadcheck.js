@@ -1,4 +1,6 @@
-﻿function ValidateInput() {
+﻿
+
+function ValidateInput() {
     if (document.getElementById("UploadBox").value == "") {
         Swal.fire({
             icon: 'error',

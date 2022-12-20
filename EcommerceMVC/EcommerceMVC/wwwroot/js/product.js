@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿var dataTable
+
+$(document).ready(function () {
     loadDataTable()
 });
 
@@ -40,7 +42,7 @@ function Delete(url) {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
-        console.log(dataTable.ajax.reload())
+        console.log(url)
         if (result.isConfirmed) {
             $.ajax({
                 url: url,

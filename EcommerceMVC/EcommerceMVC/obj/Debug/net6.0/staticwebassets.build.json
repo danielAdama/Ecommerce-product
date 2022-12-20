@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "R0QKGh3+6mM8TnFzbf9a6aR3q9yr9bNQw8C3UlLT/lA=",
+  "Hash": "3jYdUs0Sd3WEK9F37fPq+zvsjmJ6GToA+UnqU3fW8G8=",
   "Source": "EcommerceMVC",
   "BasePath": "_content/EcommerceMVC",
   "Mode": "Default",
@@ -117,6 +117,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\productImg\\25c1749a-abde-49b9-9381-77330a02558a.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\4462bbdf-e8e7-40bf-8f07-a21aea734e62.jpg",
+      "SourceId": "EcommerceMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\",
+      "BasePath": "_content/EcommerceMVC",
+      "RelativePath": "images/productImg/4462bbdf-e8e7-40bf-8f07-a21aea734e62.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\productImg\\4462bbdf-e8e7-40bf-8f07-a21aea734e62.jpg"
     },
     {
       "Identity": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\88e8cbc7-d724-4a88-882e-fbe769d58462.png",
