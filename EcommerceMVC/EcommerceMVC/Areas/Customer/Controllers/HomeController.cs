@@ -1,5 +1,9 @@
-﻿using EcommerceMVC.Models;
+﻿using Ecommerce.Infrastructure.Services.Interface;
+using EcommerceMVC.Data;
+using EcommerceMVC.Models;
+using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace EcommerceMVC.Areas.Customer.Controllers
@@ -7,16 +11,17 @@ namespace EcommerceMVC.Areas.Customer.Controllers
     [Area("Customer")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+		private readonly EcommerceDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+		public HomeController(EcommerceDbContext context)
+		{
+			_context = context;
+		}
 
-        public IActionResult Index()
+		public async Task<IActionResult> Index()
         {
-            return View();
+            IEnumerable<Product> products = await _context.Products.Include(x => x.Category).AsNoTracking().ToListAsync();
+			return View(products);
         }
 
         public IActionResult Privacy()
