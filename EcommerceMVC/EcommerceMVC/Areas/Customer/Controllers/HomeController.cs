@@ -1,4 +1,5 @@
-﻿using Ecommerce.Infrastructure.Services.Interface;
+﻿using Ecommerce.Infrastructure.Data.DTO;
+using Ecommerce.Infrastructure.Services.Interface;
 using EcommerceMVC.Data;
 using EcommerceMVC.Models;
 using EcommerceMVC.Services.Infrastructure.Persistence;
@@ -22,6 +23,16 @@ namespace EcommerceMVC.Areas.Customer.Controllers
         {
             IEnumerable<Product> products = await _context.Products.Include(x => x.Category).AsNoTracking().ToListAsync();
 			return View(products);
+        }
+
+        public async Task<IActionResult> Details(long id, CancellationToken cancellationToken)
+        {
+            ShoppingCartDTO cart = new()
+            {
+                Count = 1,
+                Product = await _context.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+            };
+            return View(cart);
         }
 
         public IActionResult Privacy()
