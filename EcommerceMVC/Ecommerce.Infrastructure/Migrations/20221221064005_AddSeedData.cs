@@ -40,7 +40,7 @@ namespace Ecommerce.Infrastructure.Migrations
                 keyColumn: "Id",
                 keyValue: 1L,
                 columns: new[] { "Name", "TimeCreated", "TimeUpdated" },
-                values: new object[] { "Laptop", new DateTimeOffset(new DateTime(2022, 12, 20, 10, 56, 48, 527, DateTimeKind.Unspecified).AddTicks(8876), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2022, 12, 20, 10, 56, 48, 527, DateTimeKind.Unspecified).AddTicks(8875), new TimeSpan(0, 0, 0, 0, 0)) });
+                values: new object[] { "Laptop", new DateTimeOffset(new DateTime(2022, 12, 21, 6, 40, 4, 835, DateTimeKind.Unspecified).AddTicks(6981), new TimeSpan(0, 0, 0, 0, 0)), new DateTimeOffset(new DateTime(2022, 12, 21, 6, 40, 4, 835, DateTimeKind.Unspecified).AddTicks(6979), new TimeSpan(0, 0, 0, 0, 0)) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",

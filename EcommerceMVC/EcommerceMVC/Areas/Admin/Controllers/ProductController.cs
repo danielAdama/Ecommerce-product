@@ -81,7 +81,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				string path = $"{@"wwwroot\images\productImg\"}{fileName}.{fileExt}";
 				if (file.Length > 0)
 				{
-					obj.Product.ImageUrl = path;
+					obj.Product.ImageUrl = path.Replace("wwwroot","");
 					using (FileStream stream = new(path, FileMode.Create))
 					{
 						await file.CopyToAsync(stream, cancellationToken);

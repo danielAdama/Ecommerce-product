@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ecommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(EcommerceDbContext))]
-    [Migration("20221220105648_AddSeedData")]
+    [Migration("20221221064005_AddSeedData")]
     partial class AddSeedData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,8 +55,8 @@ namespace Ecommerce.Infrastructure.Migrations
                             Id = 1L,
                             DisplayOrder = 1,
                             Name = "Laptop",
-                            TimeCreated = new DateTimeOffset(new DateTime(2022, 12, 20, 10, 56, 48, 527, DateTimeKind.Unspecified).AddTicks(8876), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2022, 12, 20, 10, 56, 48, 527, DateTimeKind.Unspecified).AddTicks(8875), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2022, 12, 21, 6, 40, 4, 835, DateTimeKind.Unspecified).AddTicks(6981), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2022, 12, 21, 6, 40, 4, 835, DateTimeKind.Unspecified).AddTicks(6979), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
