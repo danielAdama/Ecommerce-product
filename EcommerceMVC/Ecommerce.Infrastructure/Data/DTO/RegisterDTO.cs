@@ -9,10 +9,12 @@ namespace Ecommerce.Infrastructure.Data.DTO
 {
     public class RegisterDTO
     {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        [Display(Name = "Email Address")]
+        public string EmailAddress { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be atleast {2} characters long.", MinimumLength = 8)]
@@ -24,6 +26,6 @@ namespace Ecommerce.Infrastructure.Data.DTO
         [Display(Name = "Confirm Password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-        public string? ReturnUrl { get; set; }
+        //public string? ReturnUrl { get; set; }
     }
 }
