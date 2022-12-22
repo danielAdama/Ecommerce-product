@@ -1,0 +1,51 @@
+﻿@model Ecommerce.Infrastructure.Data.DTO.RegisterDTO;
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/Account/_RegisterLayout.cshtml";
+}
+
+<div class="register">
+    <div class="text-center">
+        <h1>Register</h1>
+        <hr />
+        <form asp-area="Account" asp-controller="Register" asp-action="Register" method="post">
+            <div>
+                <label for="FirstName" class="control-label">First Name</label>
+                <input for="FirstName" id="FirstName" class="form-control" pattern="^[a-zA-Z0-9]+$" required>
+                <span class="text-danger"></span>
+            </div>
+
+            <div>
+                <label for="LastName" class="control-label">Last Name</label>
+                <input for="LastName" id="LastName" class="form-control" pattern="^[a-zA-Z0-9]+$" required>
+                <span class="text-danger"></span>
+            </div>
+            @*<div class="form-group was-validated">
+            <label for="Country" class="control-label">Country Name</label>
+            <input for="Country" id="Country" class="form-control" pattern="^[a-zA-Z0-9]+$" required>
+            <span class="text-danger"></span>
+            </div>*@
+            <div>
+                <label for="EmailAddress" class="control-label">Email Address</label>
+                <input for="EmailAddress" id="EmailAddress" class="form-control" type="email" required>
+                <span class="text-danger"></span>
+            </div>
+
+            <div>
+                <label for="Password" class="control-label">Password</label>
+                <input type="Password" id="Password" for="Password" class="form-control" required>
+                <span class="text-danger"></span>
+            </div>
+
+            <div>
+                <label for="ConfirmPassword" class="control-label">ConfirmPassword</label>
+                <input type="Password" id="ConfirmPassword" for="ConfirmPassword" class="form-control" required>
+                <span class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="button" id="regbtn" class="btn btn-success w-100 bg-dark">Sign Up</button>
+            </div>
+        </form>
+    </div>
+</div>
+@*<script src="~/js/register.js" type="text/javascript"></script>*@

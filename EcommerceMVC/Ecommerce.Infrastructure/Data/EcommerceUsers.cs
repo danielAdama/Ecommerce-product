@@ -13,4 +13,5 @@ namespace EcommerceMVC.Data
         public DateTimeOffset TimeCreated { get; set; }
         public DateTimeOffset TimeUpdated { get; set; }
     }
+    public class ApplicationRole : IdentityRole<long> { }
 }

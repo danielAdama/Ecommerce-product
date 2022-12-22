@@ -1,9 +1,10 @@
 ﻿using EcommerceMVC.Data;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceMVC.Services.Infrastructure.Persistence
 {
-	public class EcommerceDbContext : DbContext
+	public class EcommerceDbContext : IdentityDbContext<EcommerceUser, ApplicationRole, long>
 	{
 #nullable disable
 		public EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) :

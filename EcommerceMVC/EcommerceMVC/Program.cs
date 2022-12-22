@@ -1,5 +1,6 @@
 using Ecommerce.Infrastructure.Services.Implementation;
 using Ecommerce.Infrastructure.Services.Interface;
+using EcommerceMVC.Services.Infrastructure.Auth;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.RegisterPersistence(builder.Configuration);
+builder.Services.RegisterIdentity();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 var app = builder.Build();
