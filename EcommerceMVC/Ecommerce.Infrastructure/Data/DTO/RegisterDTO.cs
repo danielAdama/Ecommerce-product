@@ -26,6 +26,6 @@ namespace Ecommerce.Infrastructure.Data.DTO
         [Display(Name = "Confirm Password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-        //public string? ReturnUrl { get; set; }
+        public string? ReturnUrl { get; set; }
     }
 }

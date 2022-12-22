@@ -7,7 +7,6 @@ namespace EcommerceMVC.Data
 #nullable disable
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        //public long? CountryId { get; set; }
         public DateTimeOffset TimeCreated { get; set; }
         public DateTimeOffset TimeUpdated { get; set; }
     }
