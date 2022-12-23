@@ -34,7 +34,6 @@
                                 <a class="dropdown-item text-black" href="#">Separated link</a>
 
                                 <div class="dropdown-divider"></div>
-
                             </div>
                         </li>
                     </ul>
@@ -44,12 +43,17 @@
                     </form>*@
                 </div>
             </div>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-area="Account" asp-controller="Identity" asp-action="Register">Register</a>
-                    </li>
-                </ul>
+            <div>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="Account" asp-controller="Identity" asp-action="Login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="Account" asp-controller="Identity" asp-action="Register">Register</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
         @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
