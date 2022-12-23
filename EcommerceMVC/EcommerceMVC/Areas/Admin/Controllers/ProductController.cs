@@ -22,7 +22,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			_categoryRepository = categoryRepository;
 		}
 
-		public async Task<IActionResult> Index()
+		public ViewResult Index()
 		{
 			return View();
 		}

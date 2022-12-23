@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "TNnjawFkzjThKMr5ShWvA5DOXglRlXIcp73TqnWFNfU=",
+  "Hash": "Z2ifbrWvqd1MFux2zKd38+ejuJQ2ToDwFU2akAdzplM=",
   "Source": "EcommerceMVC",
   "BasePath": "_content/EcommerceMVC",
   "Mode": "Default",
@@ -49,6 +49,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\EcommerceMVC.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\css\\LoginV.css",
+      "SourceId": "EcommerceMVC",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\",
+      "BasePath": "_content/EcommerceMVC",
+      "RelativePath": "css/LoginV.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\LoginV.css"
     },
     {
       "Identity": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\css\\RegisterV.css",

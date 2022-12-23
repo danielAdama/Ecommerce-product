@@ -84,5 +84,10 @@ namespace EcommerceMVC.Areas.Account.Controllers
             return View(registerDTO);
 
         }
+
+        public ViewResult Login()
+        {
+            return View();
+        }
     }
 }
