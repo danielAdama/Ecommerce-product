@@ -30,6 +30,41 @@ namespace EcommerceMVC.Areas.Account.Controllers
             return View();
         }
 
+        public IActionResult Login(string? returnUrl = null)
+        {
+            LoginDTO loginDTO = new LoginDTO();
+            loginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
+            return View(loginDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginDTO loginDTO, string returnUrl)
+        {
+            if (ModelState.IsValid)
+            {
+                string email = loginDTO.EmailAddress.Trim().ToLower();
+                var user = await _userManager.FindByEmailAsync(email);
+
+                if (user != null)
+                {
+                    var passwordCheck = await _userManager.CheckPasswordAsync(user, loginDTO.Password);
+                    if (!passwordCheck)
+                    {
+                        TempData["errorMessage"] = "Wrong password. Please try again";
+                    }
+                    var result = await _signInManager.PasswordSignInAsync(user, loginDTO.Password, loginDTO.RememberMe, lockoutOnFailure: false);
+                    if (!result.Succeeded)
+                    {
+                        TempData["errorMessage"] = "Invalid Login attempt. Please try again";
+                        return View(loginDTO);
+                    }
+                    TempData["success"] = "Log In successful";
+                    return RedirectToAction("Customer","Home","Index");
+                }
+            }
+            return View(loginDTO);
+        }
+
         public async Task<IActionResult> Register(string? returnUrl = null)
         {
             RegisterDTO registerDTO = new RegisterDTO();
@@ -83,42 +118,6 @@ namespace EcommerceMVC.Areas.Account.Controllers
             }
             return View(registerDTO);
 
-        }
-
-        public IActionResult Login(string? returnUrl = null)
-        {
-            LoginDTO LoginDTO = new LoginDTO();
-            LoginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
-            return View(LoginDTO);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginDTO loginDTO, string? returnUrl = null)
-        {
-            if(ModelState.IsValid)
-            {
-                string email = loginDTO.EmailAddress.Trim().ToLower();
-                var user = await _userManager.FindByEmailAsync(email);
-                
-                if (user != null)
-                {
-                    var passwordCheck = await _userManager.CheckPasswordAsync(user, loginDTO.Password);
-                    if (!passwordCheck)
-                    {
-                        TempData["errorMessage"] = "Wrong password. Please try again";
-                    }
-                    var result = await _signInManager.PasswordSignInAsync(user, loginDTO.Password, loginDTO.RememberMe, lockoutOnFailure:false);
-                    if (!result.Succeeded)
-                    {
-                        TempData["errorMessage"] = "Invalid Login attempt. Please try again";
-                        return View(loginDTO);
-                    }
-                    TempData["success"] = "Log In successful";
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            return View(loginDTO);
         }
 
         [HttpPost]
