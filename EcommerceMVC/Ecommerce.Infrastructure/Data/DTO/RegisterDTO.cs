@@ -9,6 +9,7 @@ namespace Ecommerce.Infrastructure.Data.DTO
 {
     public class RegisterDTO
     {
+#nullable disable
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [Required]

@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Ecommerce.Infrastructure.Data.DTO;
+@model LoginDTO;
+
+@{
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/Account/_LoginLayout.cshtml";
 }
@@ -19,6 +22,16 @@
                 <input type="password" id="Password" name="Password" asp-for="Password" class="form-control" required>
                 <div class="invalid-feedback">
                     Please provide a valid your Password.
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <div class="custom-checkbox">
+                        <label asp-for="RememberMe">
+                            <input asp-for="RememberMe" />
+                            @Html.DisplayNameFor(m => m.RememberMe)
+                        </label>
+                    </div>
                 </div>
             </div>
             <div class="form-group form-check">
