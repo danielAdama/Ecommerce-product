@@ -39,12 +39,16 @@ border-radius: 12px;
     font-size: 12px;
 }
 
-    .login form .form-group {
-        margin-bottom: 5px
-    }
+.login form .form-group {
+    margin-bottom: 5px
+}
 
-    .login form button[id="loginbtn"] {
-        font-size: 11px;
-        margin-top: 5px;
-        margin-right: 15px;
-    }
+.custom-checkbox {
+    margin-bottom: 5px;
+    margin-left: 60px;
+}
+.login form button[id="loginbtn"] {
+    font-size: 11px;
+    margin-top: 5px;
+    margin-right: 15px;
+}

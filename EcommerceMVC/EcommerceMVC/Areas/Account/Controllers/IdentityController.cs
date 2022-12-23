@@ -85,7 +85,7 @@ namespace EcommerceMVC.Areas.Account.Controllers
 
         }
 
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string? returnUrl = null)
         {
             LoginDTO LoginDTO = new LoginDTO();
             LoginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
