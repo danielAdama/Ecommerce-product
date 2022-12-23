@@ -33,12 +33,12 @@ namespace EcommerceMVC.Areas.Account.Controllers
         public IActionResult Login(string? returnUrl = null)
         {
             LoginDTO loginDTO = new LoginDTO();
-            loginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
+            //loginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
             return View(loginDTO);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO loginDTO, string returnUrl)
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             if (ModelState.IsValid)
             {
@@ -51,6 +51,7 @@ namespace EcommerceMVC.Areas.Account.Controllers
                     if (!passwordCheck)
                     {
                         TempData["errorMessage"] = "Wrong password. Please try again";
+                        return View(loginDTO);
                     }
                     var result = await _signInManager.PasswordSignInAsync(user, loginDTO.Password, loginDTO.RememberMe, lockoutOnFailure: false);
                     if (!result.Succeeded)

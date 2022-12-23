@@ -8,7 +8,7 @@
 <div class="login">
     <div class="text-center">
         <h1>Login</h1>
-        <form asp-action="Account/Identity/Login" asp-route-returnurl="@Model.ReturnUrl" method="post" role="form">
+        <form asp-action="Account/Identity/Login" method="post" role="form">
             <div>
                 <label asp-for="@Model.EmailAddress" class="control-label">Email Address</label>
                 <input type="email" name="EmailAddress" class="form-control" placeholder="janedoe@exmaple.com" required>
