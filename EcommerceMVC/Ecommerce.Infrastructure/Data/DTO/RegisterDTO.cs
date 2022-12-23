@@ -9,10 +9,13 @@ namespace Ecommerce.Infrastructure.Data.DTO
 {
     public class RegisterDTO
     {
+#nullable disable
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+        [Display(Name = "Email Address")]
+        public string EmailAddress { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be atleast {2} characters long.", MinimumLength = 8)]
