@@ -60,7 +60,7 @@ namespace EcommerceMVC.Areas.Account.Controllers
                         return View(loginDTO);
                     }
                     TempData["success"] = "Log In successful";
-                    return RedirectToAction("Customer","Home","Index");
+                    return RedirectToAction("Index", "Home", new { area = "Customer"});
                 }
             }
             return View(loginDTO);
