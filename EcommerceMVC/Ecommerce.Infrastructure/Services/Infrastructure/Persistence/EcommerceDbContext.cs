@@ -1,4 +1,5 @@
-﻿using EcommerceMVC.Data;
+﻿using Ecommerce.Infrastructure.Data;
+using EcommerceMVC.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,8 +14,11 @@ namespace EcommerceMVC.Services.Infrastructure.Persistence
 
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<Product> Products { get; set; }
+		public DbSet<EcommerceUser> EcommerceUsers { get; set; }
+		public DbSet<ApplicationRole> ApplicationRoles { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 			// Add the Postgres Extension for UUID generation
