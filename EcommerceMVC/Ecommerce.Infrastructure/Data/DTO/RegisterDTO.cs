@@ -38,6 +38,7 @@ namespace Ecommerce.Infrastructure.Data.DTO
         public string? Role { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem>? RoleList { get; set; }
+        [Display(Name = "Company")]
         public long? CompanyId { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem>? CompanyList { get; set; }

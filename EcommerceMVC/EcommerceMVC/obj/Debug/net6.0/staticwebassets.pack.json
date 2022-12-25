@@ -33,6 +33,10 @@
       "PackagePath": "staticwebassets\\js\\company.js"
     },
     {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\js\\general.js",
+      "PackagePath": "staticwebassets\\js\\general.js"
+    },
+    {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\js\\product.js",
       "PackagePath": "staticwebassets\\js\\product.js"
     },

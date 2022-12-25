@@ -141,6 +141,10 @@ namespace EcommerceMVC.Areas.Account.Controllers
                     TimeCreated = DateTime.UtcNow,
                     TimeUpdated = DateTime.UtcNow
                 };
+                if (registerDTO.Role == Constants.RoleUserCompany)
+                {
+                    newUser.CompanyId = registerDTO.CompanyId;
+                }
 
                 var newUserResponse = await _userManager.CreateAsync(newUser, registerDTO.Password);
                 if (!newUserResponse.Succeeded)
