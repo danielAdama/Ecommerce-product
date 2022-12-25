@@ -92,7 +92,8 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				if (obj.Product.Id != 0)
 				{
 					_context.Products.Update(obj.Product);
-				}
+                    TempData["success"] = "Product updated successfully";
+                }
 				if (obj.Product.Id == 0)
 				{
 					await _context.Products.AddAsync(obj.Product, cancellationToken);

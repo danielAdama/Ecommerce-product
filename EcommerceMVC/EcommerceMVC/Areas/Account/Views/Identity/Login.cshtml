@@ -1,5 +1,4 @@
-﻿@using Ecommerce.Infrastructure.Data.DTO;
-@model LoginDTO;
+﻿@model Ecommerce.Infrastructure.Data.DTO.LoginDTO;
 
 @{
     ViewData["Title"] = "Login";
@@ -9,33 +8,27 @@
 <div class="login">
     <div class="text-center">
         <h1>Login</h1>
-        <form asp-action="Account/Identity/Login" asp-route-returnurl="@Model.ReturnUrl" method="post" role="form" class="row g-3 needs-validation" novalidate>
+        <form asp-action="Account/Identity/Login" method="post" role="form">
             <div>
-                <label for="EmailAddress" class="control-label">Email Address</label>
-                <input type="email" id="EmailAddress" name="EmailAddress" asp-for="EmailAddress" class="form-control" placeholder="janedoe@exmaple.com" required>
-                <div class="invalid-feedback">
-                    Please provide a valid Email Address.
-                </div>
+                <label asp-for="EmailAddress" class="control-label">Email Address</label>
+                <input type="email" name="EmailAddress" class="form-control" placeholder="janedoe@exmaple.com" required>
             </div>
             <div>
-                <label for="PassWord" class="control-label">Password</label>
-                <input type="password" id="Password" name="Password" asp-for="Password" class="form-control" required>
-                <div class="invalid-feedback">
-                    Please provide a valid your Password.
-                </div>
+                <label asp-for="Password" class="control-label">Password</label>
+                <input type="Password" name="Password" class="form-control" required>
             </div>
             <div class="form-group">
                 <div class="col-md-10">
                     <div class="custom-checkbox">
                         <label asp-for="RememberMe">
-                            <input type="checkbox" asp-for="RememberMe" />
+                            <input type="checkbox" name="RememberMe" />
                             @Html.DisplayNameFor(m => m.RememberMe)
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group form-check">
-                <button type="submit" id="loginbtn" class="btn btn-success w-100 bg-dark">Login</button>
+                <button type="submit" class="btn btn-success w-100 bg-dark">Login</button>
             </div>
         </form>
     </div>

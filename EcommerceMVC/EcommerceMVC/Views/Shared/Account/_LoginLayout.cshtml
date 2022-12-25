@@ -4,7 +4,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] | Ecommerce</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> @*Add this jQuery to all mvc for dataTables*@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-flatly.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EcommerceMVC.styles.css" asp-append-version="true" />
@@ -17,7 +16,7 @@
     <div>
         <div>
             <div class="logreg">
-                <span class=fs-14 fw-600 workpaditext-gray>Don’t have an account? <a asp-action="Register" asp-controller="Identity" class="border-bottom border-appprimary"> Sign up here</a></span>
+                <span class=fs-14 fw-600 text-gray>Don’t have an account? <a asp-action="Register" asp-controller="Identity" class="border-bottom border-appprimary">Sign up here</a></span>
             </div>
         </div>
         @RenderBody()
