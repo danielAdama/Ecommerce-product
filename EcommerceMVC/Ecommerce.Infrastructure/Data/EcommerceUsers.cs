@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Ecommerce.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceMVC.Data
 {
@@ -11,7 +14,10 @@ namespace EcommerceMVC.Data
         public string? City { get; set; }
         public string? State { get; set; }
         public string? PostalCode { get; set; }
-        public string? PhoneNumber { get; set; }
+        public long? CompanyId { get; set; }
+        [ForeignKey("CompanyId")]
+        [ValidateNever]
+        public Company Company { get; set; }
         public DateTimeOffset TimeCreated { get; set; }
         public DateTimeOffset TimeUpdated { get; set; }
     }

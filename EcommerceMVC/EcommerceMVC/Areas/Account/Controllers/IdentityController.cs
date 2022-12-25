@@ -6,6 +6,7 @@ using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Web.Helpers;
 
@@ -100,6 +101,11 @@ namespace EcommerceMVC.Areas.Account.Controllers
                 {
                     Text = i,
                     Value = i
+                }),
+                CompanyList = (await _context.Companies.ToListAsync()).Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
                 })
             };
             registerDTO.ReturnUrl = returnUrl;
@@ -121,44 +127,34 @@ namespace EcommerceMVC.Areas.Account.Controllers
                     TempData["success"] = "This email address is already in use";
                     return View(registerDTO);
                 }
-                using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-                try
+                var newUser = new EcommerceUser
                 {
-                    var newUser = new EcommerceUser
-                    {
-                        FirstName = registerDTO.FirstName,
-                        LastName = registerDTO.LastName,
-                        Email = email,
-                        UserName = email,
-                        StreetAddress = registerDTO.StreetAddress,
-                        City = registerDTO.City,
-                        State = registerDTO.State,
-                        PostalCode = registerDTO.PostalCode,
-                        PhoneNumber = registerDTO.PhoneNumber,
-                        TimeCreated = DateTime.UtcNow,
-                        TimeUpdated = DateTime.UtcNow
-                    };
+                    FirstName = registerDTO.FirstName,
+                    LastName = registerDTO.LastName,
+                    Email = email,
+                    UserName = email,
+                    StreetAddress = registerDTO.StreetAddress,
+                    City = registerDTO.City,
+                    State = registerDTO.State,
+                    PostalCode = registerDTO.PostalCode,
+                    PhoneNumber = registerDTO.PhoneNumber,
+                    TimeCreated = DateTime.UtcNow,
+                    TimeUpdated = DateTime.UtcNow
+                };
 
-                    var newUserResponse = await _userManager.CreateAsync(newUser, registerDTO.Password);
-                    if (!newUserResponse.Succeeded)
-                    {
-                        //ModelState.AddModelError("Password", "User could not be created. Password is not unique enough");
-                        TempData["errorMessage"] = "User could not be created. Password is not unique enough";
-                    }
-                    if (registerDTO.Role == null)
-                    {
-                        await _userManager.AddToRoleAsync(newUser, Constants.RoleUserIndividual);
-                    }
-                    await _userManager.AddToRoleAsync(newUser, registerDTO.Role);
-                    await _signInManager.SignInAsync(newUser, isPersistent: false);
-                    return LocalRedirect(returnUrl);
-                }
-                catch (Exception ex)
+                var newUserResponse = await _userManager.CreateAsync(newUser, registerDTO.Password);
+                if (!newUserResponse.Succeeded)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
-                    TempData["errorMessage"] = ex.Message;
-                    return RedirectToAction("Register");
+                    //ModelState.AddModelError("Password", "User could not be created. Password is not unique enough");
+                    TempData["errorMessage"] = "User could not be created. Password is not unique enough";
                 }
+                if (registerDTO.Role == null)
+                {
+                    await _userManager.AddToRoleAsync(newUser, Constants.RoleUserIndividual);
+                }
+                await _userManager.AddToRoleAsync(newUser, registerDTO.Role);
+                await _signInManager.SignInAsync(newUser, isPersistent: false);
+                return LocalRedirect(returnUrl);
             }
             return View(registerDTO);
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,6 +36,10 @@ namespace Ecommerce.Infrastructure.Data.DTO
         public string? PhoneNumber { get; set; }
         public string? ReturnUrl { get; set; }
         public string? Role { get; set; }
+        [ValidateNever]
         public IEnumerable<SelectListItem>? RoleList { get; set; }
+        public long? CompanyId { get; set; }
+        [ValidateNever]
+        public IEnumerable<SelectListItem>? CompanyList { get; set; }
     }
 }

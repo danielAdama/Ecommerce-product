@@ -66,6 +66,12 @@
                         </select>
                     </div>
                     <div class="form-floating py-2 col-6">
+                        <label asp-for="CompanyId"></label>
+                        <select asp-for="CompanyId" asp-items="@Model.CompanyList" class="form-select">
+                            <option disabled selected>--Select Company--</option>
+                        </select>
+                    </div>
+                    <div class="form-floating py-2 col-6">
                         <label asp-for="Password" class="control-label">Password</label>
                         <input type="Password" asp-for="Password" class="form-control" required>
                     </div>
