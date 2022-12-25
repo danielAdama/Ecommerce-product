@@ -13,18 +13,18 @@
             <a class="nav-link text-light" href="#">Hello @userManager.GetUserName(User)!</a>
         </li>
         <li class="nav-item">
-            <form id="logoutForm" class="form-inline" asp-area="Account" asp-controller="Identity" asp-action="LogOut" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button id="logout" type="submit" class="nav-link btn btn-link">Logout</button>
+            <form id="logoutForm" class="form-inline" asp-area="Account" asp-controller="Identity" asp-action="LogOut" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" >
+                <button id="logout" type="submit" class="nav-link btn btn-link text-light">Logout</button>
             </form>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link" id="register" asp-area="Account" asp-action="/Identity/Register">Register</a>
+            <a class="nav-link text-light" id="register" asp-area="Account" asp-controller="Identity" asp-action="Register">Register</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="login" asp-area="Account" asp-action="/Identity/Login">Login</a>
+            <a class="nav-link text-light" id="login" asp-area="Account" asp-controller="Identity" asp-action="Login">Login</a>
         </li>
     }
 </ul>

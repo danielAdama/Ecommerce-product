@@ -33,12 +33,12 @@ namespace EcommerceMVC.Areas.Account.Controllers
         public IActionResult Login(string? returnUrl = null)
         {
             LoginDTO loginDTO = new LoginDTO();
-            //loginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
+            loginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
             return View(loginDTO);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO loginDTO)
+        public async Task<IActionResult> Login(LoginDTO loginDTO, string returnUrl)
         {
             if (ModelState.IsValid)
             {
