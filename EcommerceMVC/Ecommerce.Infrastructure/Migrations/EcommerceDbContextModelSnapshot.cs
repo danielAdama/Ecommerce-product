@@ -59,6 +59,20 @@ namespace Ecommerce.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            City = "Abuja",
+                            Name = "Selbolt",
+                            PhoneNumber = "+2348033108645",
+                            PostalCode = "900108",
+                            State = "Federal Capital Territory",
+                            StreetAddress = "News Engineering, Dawaki",
+                            TimeCreated = new DateTimeOffset(new DateTime(2022, 12, 25, 0, 33, 37, 293, DateTimeKind.Unspecified).AddTicks(8429), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2022, 12, 25, 0, 33, 37, 293, DateTimeKind.Unspecified).AddTicks(8428), new TimeSpan(0, 0, 0, 0, 0))
+                        });
                 });
 
             modelBuilder.Entity("EcommerceMVC.Data.ApplicationRole", b =>
@@ -120,8 +134,8 @@ namespace Ecommerce.Infrastructure.Migrations
                             Id = 1L,
                             DisplayOrder = 1,
                             Name = "Laptop",
-                            TimeCreated = new DateTimeOffset(new DateTime(2022, 12, 24, 23, 21, 8, 732, DateTimeKind.Unspecified).AddTicks(5071), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2022, 12, 24, 23, 21, 8, 732, DateTimeKind.Unspecified).AddTicks(5071), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2022, 12, 25, 0, 33, 37, 293, DateTimeKind.Unspecified).AddTicks(8251), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2022, 12, 25, 0, 33, 37, 293, DateTimeKind.Unspecified).AddTicks(8250), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 

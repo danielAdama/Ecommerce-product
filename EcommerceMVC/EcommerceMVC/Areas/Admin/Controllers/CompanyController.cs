@@ -27,14 +27,14 @@ namespace EcommerceMVC.Areas.Admin.Controllers
             Company company = new();
 
 
-            if (id is not 0)
-            {
-                return View(company);
-
+			if (id != 0)
+			{
+				var getCompany = await _context.Companies.FirstOrDefaultAsync(x => x.Id == id);
+				return View(getCompany);
             }
-            var getCompany = await _context.Companies.FirstOrDefaultAsync(x => x.Id == id);
-            return View(getCompany);
-        }
+			return View(company);
+
+		}
 
         [HttpPost]
         public async Task<IActionResult> Upsert(Company company, CancellationToken cancellationToken)
@@ -56,7 +56,8 @@ namespace EcommerceMVC.Areas.Admin.Controllers
                     await _context.SaveChangesAsync(cancellationToken);
                     await transaction.CommitAsync(cancellationToken);
                     TempData["success"] = "Company created successfully";
-                }
+					return RedirectToAction("Index");
+				}
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync(cancellationToken);

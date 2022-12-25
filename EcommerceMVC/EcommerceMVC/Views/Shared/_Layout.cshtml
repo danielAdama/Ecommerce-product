@@ -1,9 +1,4 @@
-﻿@using EcommerceMVC.Data;
-@using Microsoft.AspNetCore.Identity;
-@inject SignInManager<EcommerceUser> signInManager
-@inject UserManager<EcommerceUser> userManager
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -36,42 +31,12 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item text-black" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
                                 <a class="dropdown-item text-black" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
-                                <a class="dropdown-item text-black" href="#">Separated link</a>
-
                                 <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-black" asp-area="Admin" asp-controller="Company" asp-action="Index">Company</a>
                             </div>
                         </li>
                     </ul>
-                    @*<form class="d-flex">
-                        <input class="form-control me-sm-2" type="search" placeholder="Search">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form>*@
-                </div>
-            </div>
-            <div>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if (signInManager.IsSignedIn(User))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" href="#">Hello @userManager.GetUserName(User)</a>
-                            </li>
-                            <li class="nav-item">
-                                <form id="logoutForm" method="post" class="form-inline" asp-area="Account" asp-controller="Identity" asp-action="LogOut">
-                                    <button type="submit" class="btn nav-link">Logout</button>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="Account" asp-controller="Identity" asp-action="Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="Account" asp-controller="Identity" asp-action="Register">Register</a>
-                            </li>
-                        }
-                    </ul>
+                    <partial name=_LoginPartial />
                 </div>
             </div>
         </nav>

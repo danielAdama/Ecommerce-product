@@ -21,6 +21,14 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\3629eacb-2abb-47d7-a180-dfc8f2fc35a4.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\3629eacb-2abb-47d7-a180-dfc8f2fc35a4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\3e61e690-b31b-41eb-bff3-89ac593cd673.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\3e61e690-b31b-41eb-bff3-89ac593cd673.jpg"
+    },
+    {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\js\\company.js",
       "PackagePath": "staticwebassets\\js\\company.js"
     },
