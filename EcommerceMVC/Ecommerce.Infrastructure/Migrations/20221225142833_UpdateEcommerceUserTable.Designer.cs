@@ -3,6 +3,7 @@ using System;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Ecommerce.Infrastructure.Migrations
 {
     [DbContext(typeof(EcommerceDbContext))]
-    partial class EcommerceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221225142833_UpdateEcommerceUserTable")]
+    partial class UpdateEcommerceUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,8 +72,8 @@ namespace Ecommerce.Infrastructure.Migrations
                             PostalCode = "900108",
                             State = "Federal Capital Territory",
                             StreetAddress = "News Engineering, Dawaki",
-                            TimeCreated = new DateTimeOffset(new DateTime(2022, 12, 25, 15, 12, 0, 509, DateTimeKind.Unspecified).AddTicks(3177), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2022, 12, 25, 15, 12, 0, 509, DateTimeKind.Unspecified).AddTicks(3177), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2022, 12, 25, 14, 28, 33, 105, DateTimeKind.Unspecified).AddTicks(6455), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2022, 12, 25, 14, 28, 33, 105, DateTimeKind.Unspecified).AddTicks(6455), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
@@ -134,8 +136,8 @@ namespace Ecommerce.Infrastructure.Migrations
                             Id = 1L,
                             DisplayOrder = 1,
                             Name = "Laptop",
-                            TimeCreated = new DateTimeOffset(new DateTime(2022, 12, 25, 15, 12, 0, 509, DateTimeKind.Unspecified).AddTicks(3032), new TimeSpan(0, 0, 0, 0, 0)),
-                            TimeUpdated = new DateTimeOffset(new DateTime(2022, 12, 25, 15, 12, 0, 509, DateTimeKind.Unspecified).AddTicks(3031), new TimeSpan(0, 0, 0, 0, 0))
+                            TimeCreated = new DateTimeOffset(new DateTime(2022, 12, 25, 14, 28, 33, 105, DateTimeKind.Unspecified).AddTicks(6331), new TimeSpan(0, 0, 0, 0, 0)),
+                            TimeUpdated = new DateTimeOffset(new DateTime(2022, 12, 25, 14, 28, 33, 105, DateTimeKind.Unspecified).AddTicks(6331), new TimeSpan(0, 0, 0, 0, 0))
                         });
                 });
 
@@ -152,9 +154,6 @@ namespace Ecommerce.Infrastructure.Migrations
 
                     b.Property<string>("City")
                         .HasColumnType("text");
-
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -222,8 +221,6 @@ namespace Ecommerce.Infrastructure.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -372,15 +369,6 @@ namespace Ecommerce.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("EcommerceMVC.Data.EcommerceUser", b =>
-                {
-                    b.HasOne("Ecommerce.Infrastructure.Data.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("EcommerceMVC.Data.Product", b =>

@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@model Ecommerce.Infrastructure.Data.DTO.LoginDTO;
+
+<!DOCTYPE html>
+<html lang="en">
 
 <html>
 <head>
@@ -13,6 +16,34 @@
 </head>
 <body>
     <partial name="_Notification" />
+    <div class="login">
+        <div class="text-center">
+            <h1>Login</h1>
+            <form asp-area="Account" asp-controller="Identity" asp-action="Login" method="post" role="form">
+                <div>
+                    <label asp-for="EmailAddress" class="control-label">Email Address</label>
+                    <input type="email" name="EmailAddress" class="form-control" placeholder="janedoe@exmaple.com" required>
+                </div>
+                <div>
+                    <label asp-for="Password" class="control-label">Password</label>
+                    <input type="Password" name="Password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <div class="custom-checkbox">
+                            <label asp-for="RememberMe">
+                                <input type="checkbox" name="RememberMe" />
+                                @Html.DisplayNameFor(m => m.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-check">
+                    <button type="submit" class="btn btn-success w-100 bg-dark">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div>
         <div>
             <div class="logreg">
