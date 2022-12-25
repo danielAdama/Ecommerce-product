@@ -5,6 +5,7 @@ using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading;
 using System.Web.Helpers;
 
@@ -93,7 +94,14 @@ namespace EcommerceMVC.Areas.Account.Controllers
                     Name = Constants.RoleUserCompany,
                 });
             }
-            RegisterDTO registerDTO = new RegisterDTO();
+            RegisterDTO registerDTO = new RegisterDTO()
+            {
+                RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+                {
+                    Text = i,
+                    Value = i
+                })
+            };
             registerDTO.ReturnUrl = returnUrl;
             return View(registerDTO);
         }
@@ -122,6 +130,11 @@ namespace EcommerceMVC.Areas.Account.Controllers
                         LastName = registerDTO.LastName,
                         Email = email,
                         UserName = email,
+                        StreetAddress = registerDTO.StreetAddress,
+                        City = registerDTO.City,
+                        State = registerDTO.State,
+                        PostalCode = registerDTO.PostalCode,
+                        PhoneNumber = registerDTO.PhoneNumber,
                         TimeCreated = DateTime.UtcNow,
                         TimeUpdated = DateTime.UtcNow
                     };
@@ -132,6 +145,11 @@ namespace EcommerceMVC.Areas.Account.Controllers
                         //ModelState.AddModelError("Password", "User could not be created. Password is not unique enough");
                         TempData["errorMessage"] = "User could not be created. Password is not unique enough";
                     }
+                    if (registerDTO.Role == null)
+                    {
+                        await _userManager.AddToRoleAsync(newUser, Constants.RoleUserIndividual);
+                    }
+                    await _userManager.AddToRoleAsync(newUser, registerDTO.Role);
                     await _signInManager.SignInAsync(newUser, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
