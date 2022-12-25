@@ -7,6 +7,10 @@ namespace EcommerceMVC.Data
 #nullable disable
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string? StreetAddress { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? PostalCode { get; set; }
         public DateTimeOffset TimeCreated { get; set; }
         public DateTimeOffset TimeUpdated { get; set; }
     }

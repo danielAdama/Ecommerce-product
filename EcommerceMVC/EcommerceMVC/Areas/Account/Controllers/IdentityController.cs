@@ -1,10 +1,12 @@
 ﻿using Ecommerce.Infrastructure.Data.DTO;
 using Ecommerce.Infrastructure.Services.Interface;
+using Ecommerce.Infrastructure.Utilities;
 using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
+using System.Web.Helpers;
 
 namespace EcommerceMVC.Areas.Account.Controllers
 {
@@ -14,16 +16,19 @@ namespace EcommerceMVC.Areas.Account.Controllers
         private readonly EcommerceDbContext _context;
         private readonly UserManager<EcommerceUser> _userManager;
         private readonly SignInManager<EcommerceUser> _signInManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
         public IdentityController(
             EcommerceDbContext context,
             UserManager<EcommerceUser> userManager,
-            SignInManager<EcommerceUser> signInManager
+            SignInManager<EcommerceUser> signInManager,
+            RoleManager<ApplicationRole> roleManager
         )
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
         public IActionResult Index()
         {
@@ -66,8 +71,28 @@ namespace EcommerceMVC.Areas.Account.Controllers
             return View(loginDTO);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Register(string? returnUrl = null)
         {
+            if (!await _roleManager.RoleExistsAsync(Constants.RoleAdmin))
+            {
+                await _roleManager.CreateAsync(new ApplicationRole
+                {
+                    Name = Constants.RoleAdmin,
+                });
+                await _roleManager.CreateAsync(new ApplicationRole
+                {
+                    Name = Constants.RoleEmployee,
+                });
+                await _roleManager.CreateAsync(new ApplicationRole
+                {
+                    Name = Constants.RoleUserIndividual,
+                });
+                await _roleManager.CreateAsync(new ApplicationRole
+                {
+                    Name = Constants.RoleUserCompany,
+                });
+            }
             RegisterDTO registerDTO = new RegisterDTO();
             registerDTO.ReturnUrl = returnUrl;
             return View(registerDTO);
