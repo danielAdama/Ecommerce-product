@@ -11,7 +11,8 @@
           "Ecommerce.Infrastructure": "1.0.0",
           "Microsoft.EntityFrameworkCore.Design": "6.0.12",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "6.0.11",
-          "SendGrid": "9.28.1"
+          "SendGrid": "9.28.1",
+          "SendGrid.Extensions.DependencyInjection": "1.0.1"
         },
         "runtime": {
           "EcommerceMVC.dll": {}
@@ -1813,6 +1814,18 @@
           }
         }
       },
+      "SendGrid.Extensions.DependencyInjection/1.0.1": {
+        "dependencies": {
+          "Microsoft.Extensions.Http": "7.0.0",
+          "SendGrid": "9.28.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/SendGrid.Extensions.DependencyInjection.dll": {
+            "assemblyVersion": "1.0.1.0",
+            "fileVersion": "1.0.1.0"
+          }
+        }
+      },
       "starkbank-ecdsa/1.3.3": {
         "runtime": {
           "lib/netstandard2.1/StarkbankEcdsa.dll": {
@@ -3583,6 +3596,13 @@
       "sha512": "sha512-LyIkgjd+svXuQxpqe5pvyOccyUdKcDqwnBNDPjyCngkKeVpXAOTAr3U1DBLWqHEbFHvu2UBFki3SJzDwxvJdfA==",
       "path": "sendgrid/9.28.1",
       "hashPath": "sendgrid.9.28.1.nupkg.sha512"
+    },
+    "SendGrid.Extensions.DependencyInjection/1.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-M3dHAkRIIDWvGNro5S25xjQ+nvUTomZ5er12TL0Re+G2UwIntMvO2OthECb3SV28AvOtDd4yZERjdHTrJ+gD1w==",
+      "path": "sendgrid.extensions.dependencyinjection/1.0.1",
+      "hashPath": "sendgrid.extensions.dependencyinjection.1.0.1.nupkg.sha512"
     },
     "starkbank-ecdsa/1.3.3": {
       "type": "package",

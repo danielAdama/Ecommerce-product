@@ -21,10 +21,14 @@
             <span class=fs-14 fw-600 workpaditext-gray>Already have an account? <a asp-area="Account" asp-controller="Identity" asp-action="Login" class="border-bottom border-appprimary"> Login here</a></span>
         </div>
         <div class="row pt-4">
-            <div class="col-md-7">
-                <h1>@ViewData["Title"]</h1>
-                <form asp-area="Account" asp-controller="Identity" asp-action="Register" class="row" method="post" role="form">
+            <div class="col">
+                <h5>A few clicks away from creating account</h5>
+            </div>
+            <div class="col-8">
+                <div class="d-flex flex-column justify-content-center align-items-center">
+                    <h1>@ViewData["Title"]</h1>
                     <h5>Create a new account.</h5>
+                    <form asp-area="Account" asp-controller="Identity" asp-action="Register" class="row" method="post" role="form">
                     <hr />
                     <div class="form-floating py-2 col-6">
                         <label asp-for="FirstName" class="control-label">First Name</label>
@@ -83,6 +87,7 @@
                         <button type="submit" class="btn btn-success w-100 bg-dark">Sign Up</button>
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     </header>
