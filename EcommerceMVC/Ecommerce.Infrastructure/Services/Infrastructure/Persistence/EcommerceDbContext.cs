@@ -17,6 +17,7 @@ namespace EcommerceMVC.Services.Infrastructure.Persistence
 		public DbSet<EcommerceUser> EcommerceUsers { get; set; }
 		public DbSet<ApplicationRole> ApplicationRoles { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
