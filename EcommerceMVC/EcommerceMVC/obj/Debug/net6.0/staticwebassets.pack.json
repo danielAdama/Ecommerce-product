@@ -29,6 +29,10 @@
       "PackagePath": "staticwebassets\\images\\productImg\\3e61e690-b31b-41eb-bff3-89ac593cd673.jpg"
     },
     {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\img\\Login-rafiki.svg",
+      "PackagePath": "staticwebassets\\img\\Login-rafiki.svg"
+    },
+    {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\js\\company.js",
       "PackagePath": "staticwebassets\\js\\company.js"
     },
