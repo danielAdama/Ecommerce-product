@@ -165,7 +165,6 @@ namespace EcommerceMVC.Areas.Account.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
