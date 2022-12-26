@@ -168,7 +168,7 @@ namespace EcommerceMVC.Areas.Account.Controllers
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index","Home");
+            return RedirectToAction(nameof(Index),"Home");
         }
     }
 }
