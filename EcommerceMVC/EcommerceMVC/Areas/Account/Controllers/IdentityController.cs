@@ -37,15 +37,15 @@ namespace EcommerceMVC.Areas.Account.Controllers
             return View();
         }
 
-        public IActionResult Login(string? returnUrl = null)
+        public IActionResult Login()
         {
             LoginDTO loginDTO = new LoginDTO();
-            loginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
+            //loginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
             return View(loginDTO);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO loginDTO, string returnUrl)
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             if (ModelState.IsValid)
             {
@@ -165,7 +165,6 @@ namespace EcommerceMVC.Areas.Account.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();

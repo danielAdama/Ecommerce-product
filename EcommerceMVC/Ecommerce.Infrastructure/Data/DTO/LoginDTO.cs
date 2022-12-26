@@ -18,6 +18,6 @@ namespace Ecommerce.Infrastructure.Data.DTO
         public string Password { get; set; }
         [Display(Name = "Remember Me?")]
         public bool RememberMe { get; set; }
-        public string? ReturnUrl { get; set; }
+        //public string ReturnUrl { get; set; }
     }
 }

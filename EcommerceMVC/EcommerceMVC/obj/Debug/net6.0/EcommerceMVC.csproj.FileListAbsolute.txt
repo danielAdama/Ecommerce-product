@@ -563,3 +563,4 @@ C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\Ec
 C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\obj\Debug\net6.0\EcommerceMVC.csproj.CopyComplete
 C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\obj\Debug\net6.0\EcommerceMVC.genruntimeconfig.cache
 C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\obj\Debug\net6.0\ref\EcommerceMVC.dll
+C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\bin\Debug\net6.0\SendGrid.Extensions.DependencyInjection.dll
