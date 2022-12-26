@@ -2763,6 +2763,23 @@
           }
         }
       },
+      "SendGrid.Extensions.DependencyInjection/1.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Http": "2.1.0",
+          "SendGrid": "9.24.3"
+        },
+        "compile": {
+          "lib/netstandard2.0/SendGrid.Extensions.DependencyInjection.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/SendGrid.Extensions.DependencyInjection.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "starkbank-ecdsa/1.3.3": {
         "type": "package",
         "compile": {
@@ -7573,6 +7590,19 @@
         "sendgrid.nuspec"
       ]
     },
+    "SendGrid.Extensions.DependencyInjection/1.0.1": {
+      "sha512": "M3dHAkRIIDWvGNro5S25xjQ+nvUTomZ5er12TL0Re+G2UwIntMvO2OthECb3SV28AvOtDd4yZERjdHTrJ+gD1w==",
+      "type": "package",
+      "path": "sendgrid.extensions.dependencyinjection/1.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/SendGrid.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.0/SendGrid.Extensions.DependencyInjection.xml",
+        "sendgrid.extensions.dependencyinjection.1.0.1.nupkg.sha512",
+        "sendgrid.extensions.dependencyinjection.nuspec"
+      ]
+    },
     "starkbank-ecdsa/1.3.3": {
       "sha512": "OblOaKb1enXn+dSp7tsx9yjwV+/BEKM9jFhshIkZTwCk7LuTFTp+wSon6rFzuPiIiTGtvVWQNUw2slHjGktJog==",
       "type": "package",
@@ -11556,7 +11586,8 @@
       "Ecommerce.Infrastructure >= 1.0.0",
       "Microsoft.EntityFrameworkCore.Design >= 6.0.12",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.11",
-      "SendGrid >= 9.28.1"
+      "SendGrid >= 9.28.1",
+      "SendGrid.Extensions.DependencyInjection >= 1.0.1"
     ]
   },
   "packageFolders": {
@@ -11620,6 +11651,10 @@
           "SendGrid": {
             "target": "Package",
             "version": "[9.28.1, )"
+          },
+          "SendGrid.Extensions.DependencyInjection": {
+            "target": "Package",
+            "version": "[1.0.1, )"
           }
         },
         "imports": [
