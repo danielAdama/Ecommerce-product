@@ -36,7 +36,6 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			{
 				cart.Price = (cart.Count * cart.Product.Price);
 			}
-			Console.WriteLine(ShoppingCartDTO);
 			return View(ShoppingCartDTO);
         }
     }
