@@ -25,5 +25,7 @@ namespace Ecommerce.Infrastructure.Data
         [ForeignKey("EcommerceUserId")]
         [ValidateNever]
         public EcommerceUser EcommerceUser { get; set; }
+        [NotMapped]
+        public double Price { get; set; }
     }
 }

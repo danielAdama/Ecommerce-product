@@ -14,6 +14,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		private readonly EcommerceDbContext _context;
 #nullable disable
 		public ShoppingCartDTO ShoppingCartDTO { get; set; }
+		public int OrderTotal { get; set; }
 
 		public CartController(EcommerceDbContext context)
 		{
@@ -31,6 +32,11 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				.Include(u => u.Product)
 				.ToListAsync(cancellationToken)
 			};
+			foreach(var cart in ShoppingCartDTO.ListCart)
+			{
+				cart.Price = (cart.Count * cart.Product.Price);
+			}
+			Console.WriteLine(ShoppingCartDTO);
 			return View(ShoppingCartDTO);
         }
     }
