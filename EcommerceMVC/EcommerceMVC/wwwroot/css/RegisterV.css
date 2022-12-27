@@ -20,7 +20,6 @@ text-decoration: underline;
 color: #0171ff;
 }
 .col {
-height: 100vh;
 width: 100%;
 }
 .row {
@@ -36,7 +35,7 @@ width: 590px;
 }
 .row form {
 display: grid;
-grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 gap: 20px;
 margin-top: 30px;
 }
@@ -117,4 +116,9 @@ margin: auto;
 .col {
 height: auto;
 }
+}
+@media screen and (min-width: 1611px) {
+    .col{
+        height: 100vh;
+    }
 }
