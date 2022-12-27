@@ -51,7 +51,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
                 var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
                 shoppingCart.EcommerceUserId = Convert.ToInt64(claim.Value);
 
-                ShoppingCart cartProduct = await _context.ShoppingCarts.FirstOrDefaultAsync(x => 
+                var cartProduct = await _context.ShoppingCarts.FirstOrDefaultAsync(x => 
                 x.EcommerceUserId.Equals(Convert.ToInt64(claim.Value)) && 
                 x.ProductId.Equals(shoppingCart.ProductId), cancellationToken);
 
@@ -76,7 +76,6 @@ namespace EcommerceMVC.Areas.Customer.Controllers
                 TempData["errorMessage"] = ex.Message;
                 return RedirectToAction(nameof(Index));
             }
-
             //return View(cart);
             return RedirectToAction(nameof(Index));
         }

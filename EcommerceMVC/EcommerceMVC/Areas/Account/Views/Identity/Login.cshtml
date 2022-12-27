@@ -1,13 +1,12 @@
-﻿
+﻿@model Ecommerce.Infrastructure.Data.DTO.LoginDTO;
 @{
     ViewData["Title"] = "Login";
-    Layout = "~/Views/Shared/Account/_LoginLayout.cshtml";
 }
 
-@*<div class="login">
+<div class="login">
     <div class="text-center">
         <h1>Login</h1>
-        <form asp-action="Account/Identity/Login" method="post" role="form">
+        <form asp-area="Account" asp-controller="Identity" asp-action="Login" method="post" role="form">
             <div>
                 <label asp-for="EmailAddress" class="control-label">Email Address</label>
                 <input type="email" name="EmailAddress" class="form-control" placeholder="janedoe@exmaple.com" required>
@@ -16,14 +15,12 @@
                 <label asp-for="Password" class="control-label">Password</label>
                 <input type="Password" name="Password" class="form-control" required>
             </div>
-            <div class="form-group">
-                <div class="col-md-10">
-                    <div class="custom-checkbox">
-                        <label asp-for="RememberMe">
-                            <input type="checkbox" name="RememberMe" />
-                            @Html.DisplayNameFor(m => m.RememberMe)
-                        </label>
-                    </div>
+            <div>
+                <div class="checkbox">
+                    <label asp-for="RememberMe" class="form-label">
+                        <input class="form-check-input" asp-for="RememberMe" />
+                        @Html.DisplayNameFor(m => m.RememberMe)
+                    </label>
                 </div>
             </div>
             <div class="form-group form-check">
@@ -31,4 +28,11 @@
             </div>
         </form>
     </div>
-</div>*@
+</div>
+<div>
+    <div>
+        <div class="logreg">
+            <span class=fs-14 fw-600 text-gray>Don’t have an account? <a asp-action="Register" asp-controller="Identity" class="border-bottom border-appprimary">Sign up here</a></span>
+        </div>
+    </div>
+</div>

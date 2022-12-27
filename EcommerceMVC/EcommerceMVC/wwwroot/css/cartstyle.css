@@ -1,0 +1,16 @@
+﻿body,html {
+    padding: 0;
+    margin: 0;
+}
+main {
+    min-height: 700px
+}
+.description_wrapper{
+    width: 400px;
+    margin-left: 40px;
+}
+@media screen and (max-width: 768px) {
+    .description_wrapper{
+        margin: 0;
+    }
+}
