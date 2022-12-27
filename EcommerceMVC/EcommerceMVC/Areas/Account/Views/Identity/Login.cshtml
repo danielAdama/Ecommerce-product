@@ -3,36 +3,73 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="login">
-    <div class="text-center">
-        <h1>Login</h1>
-        <form asp-area="Account" asp-controller="Identity" asp-action="Login" method="post" role="form">
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | Ecommerce</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EcommerceMVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/loginV.css" asp-append-version="true" />
+</head>
+
+<body>
+    <partial name="_Notification" />
+    <div class="row">
+        <div class="col first-wrapper">
             <div>
-                <label asp-for="EmailAddress" class="control-label">Email Address</label>
-                <input type="email" name="EmailAddress" class="form-control" placeholder="janedoe@exmaple.com" required>
+                <h5>A few clicks away from logging into your account</h5>
             </div>
             <div>
-                <label asp-for="Password" class="control-label">Password</label>
-                <input type="Password" name="Password" class="form-control" required>
+                <img src="~/img/Login-rafiki.svg" alt="login svg">
             </div>
-            <div>
-                <div class="checkbox">
-                    <label asp-for="RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="RememberMe" />
-                        @Html.DisplayNameFor(m => m.RememberMe)
-                    </label>
+        </div>
+        <div class="col login">
+            <div class="form-wrapper">
+                <div>
+                    <h1>Login</h1>
+                </div>
+                <form asp-area="Account" asp-controller="Identity" asp-action="Login" method="post" role="form">
+                    <div class="input_wrapper">
+                        <label asp-for="EmailAddress" class="control-label">Email Address</label>
+                        <input type="email" name="EmailAddress" class="form-control" placeholder="janedoe@exmaple.com"
+                            required>
+                    </div>
+                    <div class="input_wrapper">
+                        <label asp-for="Password" class="control-label">Password</label>
+                        <input type="Password" name="Password" class="form-control" required>
+                    </div>
+                    <div>
+                        <div class="checkbox">
+                            <label asp-for="RememberMe" class="form-label">
+                                <input type="checkbox" class="form-check-input" asp-for="RememberMe" />
+                                <!-- @Html.DisplayNameFor(m => m.RememberMe) -->
+                                <p>remember me</p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group form-check">
+                        <button type="submit" class="btn btn-success w-100 bg-dark">Login</button>
+                    </div>
+                </form>
+                <div>
+                    <div>
+                        <div class="reg">
+                            <span class=fs-14 fw-600 text-gray>Don’t have an account? <a asp-action="Register"
+                                    asp-controller="Identity" class="border-bottom border-appprimary">Sign up
+                                    here</a></span>
+                        </div>
+                    </div>
+                    @RenderBody()
                 </div>
             </div>
-            <div class="form-group form-check">
-                <button type="submit" class="btn btn-success w-100 bg-dark">Login</button>
-            </div>
-        </form>
-    </div>
-</div>
-<div>
-    <div>
-        <div class="logreg">
-            <span class=fs-14 fw-600 text-gray>Don’t have an account? <a asp-action="Register" asp-controller="Identity" class="border-bottom border-appprimary">Sign up here</a></span>
         </div>
     </div>
-</div>
+
+</body>
+
+</html>
