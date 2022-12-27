@@ -3,22 +3,25 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="login">
-    <div class="text-center">
-        <h1>Login</h1>
+<div class="col login">
+    <div class="form-wrapper">
+        <div>
+            <h1>Login</h1>
+        </div>
         <form asp-area="Account" asp-controller="Identity" asp-action="Login" method="post" role="form">
-            <div>
+            <div class="input_wrapper">
                 <label asp-for="EmailAddress" class="control-label">Email Address</label>
-                <input type="email" name="EmailAddress" class="form-control" placeholder="janedoe@exmaple.com" required>
+                <input type="email" name="EmailAddress" class="form-control" placeholder="janedoe@exmaple.com"
+                       required>
             </div>
-            <div>
+            <div class="input_wrapper">
                 <label asp-for="Password" class="control-label">Password</label>
                 <input type="Password" name="Password" class="form-control" required>
             </div>
             <div>
                 <div class="checkbox">
                     <label asp-for="RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="RememberMe" />
+                        <input type="checkbox" class="form-check-input" class="form-check-input" asp-for="RememberMe" />
                         @Html.DisplayNameFor(m => m.RememberMe)
                     </label>
                 </div>
@@ -36,3 +39,4 @@
         </div>
     </div>
 </div>
+

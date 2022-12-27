@@ -17,7 +17,7 @@ namespace EcommerceMVC.Services.Infrastructure.Persistence
 				//option.EnableSensitiveDataLogging();
 			});
 
-			return services;
+            return services;
 		}
 
 		public static void Seed(this ModelBuilder modelBuilder)

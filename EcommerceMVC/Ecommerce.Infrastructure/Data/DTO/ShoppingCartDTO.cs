@@ -12,6 +12,6 @@ namespace Ecommerce.Infrastructure.Data.DTO
     {
 #nullable disable
 		public IEnumerable<ShoppingCart> ListCart { get; set; }
-		public double TotalCartPrice { get; set; }
+		public OrderHeader OrderHeader { get; set; }
 	}
 }

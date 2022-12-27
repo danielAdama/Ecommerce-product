@@ -178,6 +178,10 @@
             "SendGrid.Extensions.DependencyInjection": {
               "target": "Package",
               "version": "[1.0.1, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[41.3.0, )"
             }
           },
           "imports": [
