@@ -159,11 +159,12 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				
 				var service = new SessionService();
 				Session session = service.Create(options);
-				ShoppingCartDTO.OrderHeader.SessionId = session.Id;
-				ShoppingCartDTO.OrderHeader.PaymentIntentId = session.PaymentIntentId;
-				//UpdateStripePaymentId(ShoppingCartDTO.OrderHeader.Id, session.Id, session.PaymentIntentId);
+				//ShoppingCartDTO.OrderHeader.SessionId = session.Id;
+				//ShoppingCartDTO.OrderHeader.PaymentIntentId = session.PaymentIntentId;
+				UpdateStripePaymentId(ShoppingCartDTO.OrderHeader.Id, session.Id, session.PaymentIntentId);
 				await _context.SaveChangesAsync(cancellationToken);
 				Response.Headers.Add("Location", session.Url);
+				await transaction.CommitAsync(cancellationToken);
 			}
 			catch (Exception ex)
 			{
@@ -171,12 +172,12 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				TempData["errorMessage"] = ex.Message;
 				return RedirectToAction("Index", "Home");
 			}
-            //return RedirectToAction("Index", "Home");
 			return new StatusCodeResult(303);
 		}
 
 		public async Task<IActionResult> OrderConfirmation(long id, CancellationToken cancellationToken)
 		{
+			int idint = Convert.ToUInt16(id);
 			OrderHeader orderHeader = await _context.OrderHeaders.FindAsync(id);
 			var service = new SessionService();
 			Session session = service.Get(orderHeader.SessionId);
@@ -206,7 +207,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				TempData["errorMessage"] = ex.Message;
 				return RedirectToAction("Index", "Home");
 			}
-			return View(id);
+			return View(idint);
 		}
 
 
