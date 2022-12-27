@@ -152,12 +152,12 @@ namespace EcommerceMVC.Areas.Account.Controllers
                     //ModelState.AddModelError("Password", "User could not be created. Password is not unique enough");
                     TempData["errorMessage"] = "User could not be created. Password is not unique enough";
                 }
-                if (registerDTO.Role == null)
+                if (registerDTO.Role != null)
                 {
-                    await _userManager.AddToRoleAsync(newUser, Constants.RoleUserIndividual);
+					await _userManager.AddToRoleAsync(newUser, registerDTO.Role);
                 }
-                await _userManager.AddToRoleAsync(newUser, registerDTO.Role);
-                await _signInManager.SignInAsync(newUser, isPersistent: false);
+				await _userManager.AddToRoleAsync(newUser, Constants.RoleUserIndividual);
+				await _signInManager.SignInAsync(newUser, isPersistent: false);
                 return LocalRedirect(returnUrl);
             }
             return View(registerDTO);
