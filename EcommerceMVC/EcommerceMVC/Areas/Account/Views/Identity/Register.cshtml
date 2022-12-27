@@ -1,71 +1,89 @@
-﻿
+﻿@model Ecommerce.Infrastructure.Data.DTO.RegisterDTO;
 @{
     ViewData["Title"] = "Register";
-    Layout = "~/Views/Shared/Account/_RegisterLayout.cshtml";
 }
 
-
-@*<div class="row pt-4">
-    <div class="col-md-7">
-        <h1>@ViewData["Title"]</h1>
-        <form asp-action="Account/Identity/Register" class = "row" method="post" role="form">
-            <h5>Create a new account.</h5>
-            <hr />
-            <div class="form-floating py-2 col-6">
-                <label asp-for="FirstName" class="control-label">First Name</label>
-                <input name="FirstName" class="form-control" required>
-            </div>
-
-            <div class="form-floating py-2 col-6">
-                <label asp-for="LastName" class="control-label">Last Name</label>
-                <input name="LastName" class="form-control" required>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="StreetAddress" class="control-label">Street Address</label>
-                <input name="StreetAddress" class="form-control" required>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="City" class="control-label">City</label>
-                <input name="City" class="form-control" required>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="State" class="control-label">State</label>
-                <input name="State" class="form-control" required>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="PostalCode" class="control-label">Postal Code</label>
-                <input name="PostalCode" class="form-control" required>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="PhoneNumber" class="control-label">PhoneNumber</label>
-                <input name="PhoneNumber" class="form-control" required>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="EmailAddress" class="control-label">Email Address</label>
-                <input name="EmailAddress" class="form-control" type="email" required>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="@Model.Role"></label>
-                <select name="@Model.Role" asp-for="@Model.Role" asp-items="@Model.RoleList" class="form-select">
-                    <option disabled selected>--Select Role--</option>
-                </select>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="Password" class="control-label">Password</label>
-                <input type="Password" name="Password" class="form-control" required>
-            </div>
-            <div class="form-floating py-2 col-6">
-                <label asp-for="Password" class="control-label">Password</label>
-                <input type="Password" name="Password" class="form-control" required>
-            </div>
-
-            <div class="form-floating py-2 col-6">
-                <label asp-for="ConfirmPassword" class="control-label">ConfirmPassword</label>
-                <input type="Password" name="ConfirmPassword" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-success w-100 bg-dark">Sign Up</button>
-            </div>
-        </form>
+<div class="row pt-4">
+    <div class="col first-wrapper">
+        <div>
+            <h5>A few clicks away from creating account</h5>
+        </div>
+        <div>
+            <img src="~/img/Login-rafiki.svg" alt="signup svg">
+        </div>
     </div>
-</div>*@
+    <div class="col">
+        <div class="form-wrapper">
+            <h1>@ViewData["Title"]</h1>
+            <p>Let's get you all set up so you can verify your personal account and begin setting up your profile</p>
+            <hr />
+            <form asp-area="Account" asp-controller="Identity" asp-action="Register" method="post" role="form">
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="FirstName" class="control-label">First Name</label><br>
+                    <input asp-for="FirstName" class="form-control" required>
+                </div>
+
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="LastName" class="control-label">Last Name</label> <br>
+                    <input asp-for="LastName" class="form-control" required>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="StreetAddress" class="control-label">Street Address</label> <br>
+                    <input asp-for="StreetAddress" class="form-control" required>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="City" class="control-label">City</label> <br>
+                    <input asp-for="City" class="form-control" required>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="State" class="control-label">State</label> <br>
+                    <input asp-for="State" class="form-control" required>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="PostalCode" class="control-label">Postal Code</label> <br>
+                    <input asp-for="PostalCode" class="form-control" required>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="PhoneNumber" class="control-label">PhoneNumber</label> <br>
+                    <input asp-for="PhoneNumber" class="form-control" required>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="EmailAddress" class="control-label">Email Address</label> <br>
+                    <input asp-for="EmailAddress" class="form-control" type="email" required>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="Role"></label> <br>
+                    <select asp-for="Role" asp-items="@Model.RoleList" class="form-select">
+                        <option disabled selected>--Select Role--</option>
+                    </select>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="Password" class="control-label">Password</label> <br>
+                    <input type="Password" asp-for="Password" class="form-control" required>
+                </div>
+
+                <div class="form-floating py-2 col-6">
+                    <label asp-for="ConfirmPassword" class="control-label">ConfirmPassword</label> <br>
+                    <input type="Password" asp-for="ConfirmPassword" class="form-control" required>
+                </div>
+                <div class="form-floating py-2 col-6">
+                    <select asp-for="CompanyId" style="display:none" asp-items="@Model.CompanyList" class="form-select">
+                        <option disabled selected>--Select Company--</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success w-100 bg-dark">Create Account</button>
+                </div>
+            </form>
+            <div class="reg">
+                <span class="fs-14 fw-600 workpaditext-gray">
+                    Already have an account? <a asp-area="Account"
+                                                asp-controller="Identity" asp-action="Login" class="border-bottom border-appprimary">
+                        Login
+                        here
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

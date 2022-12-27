@@ -1,4 +1,5 @@
-﻿using Ecommerce.Infrastructure.Data.DTO;
+﻿using Ecommerce.Infrastructure.Data;
+using Ecommerce.Infrastructure.Data.DTO;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		private readonly EcommerceDbContext _context;
 #nullable disable
 		public ShoppingCartDTO ShoppingCartDTO { get; set; }
+		public int OrderTotal { get; set; }
 
 		public CartController(EcommerceDbContext context)
 		{
@@ -31,7 +33,82 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				.Include(u => u.Product)
 				.ToListAsync(cancellationToken)
 			};
+			foreach(var cart in ShoppingCartDTO.ListCart)
+			{
+				var price = (cart.Count * cart.Product.Price);
+				cart.Price = price;
+				ShoppingCartDTO.TotalCartPrice += price;
+			}
 			return View(ShoppingCartDTO);
         }
-    }
+
+		public async Task<IActionResult> Plus(long cartId, CancellationToken cancellationToken)
+		{
+			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			try
+			{
+				var cart = await _context.ShoppingCarts.FindAsync(cartId);
+				cart.Count = IncrementCount(cart, 1).Count;
+				await _context.SaveChangesAsync(cancellationToken);
+				await transaction.CommitAsync(cancellationToken);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync(cancellationToken);
+				TempData["errorMessage"] = ex.Message;
+				return RedirectToAction(nameof(Index));
+			}
+			return RedirectToAction(nameof(Index));
+		}
+		public async Task<IActionResult> Minus(long cartId, CancellationToken cancellationToken)
+		{
+			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			try
+			{
+				var cart = await _context.ShoppingCarts.FindAsync(cartId);
+				if (cart.Count <= 0)
+				{
+					_context.ShoppingCarts.Remove(cart);
+				}
+				cart.Count = DecrementCount(cart, 1).Count;
+				await _context.SaveChangesAsync(cancellationToken);
+				await transaction.CommitAsync(cancellationToken);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync(cancellationToken);
+				TempData["errorMessage"] = ex.Message;
+				return RedirectToAction(nameof(Index));
+			}
+			return RedirectToAction(nameof(Index));
+		}
+		public async Task<IActionResult> Remove(long cartId, CancellationToken cancellationToken)
+		{
+			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			try
+			{
+				var cart = await _context.ShoppingCarts.FindAsync(cartId);
+				_context.ShoppingCarts.Remove(cart);
+				await _context.SaveChangesAsync(cancellationToken);
+				await transaction.CommitAsync(cancellationToken);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync(cancellationToken);
+				TempData["errorMessage"] = ex.Message;
+				return RedirectToAction(nameof(Index));
+			}
+			return RedirectToAction(nameof(Index));
+		}
+		private static ShoppingCart DecrementCount(ShoppingCart shoppingCart, int count)
+		{
+			shoppingCart.Count -= count;
+			return shoppingCart;
+		}
+		private static ShoppingCart IncrementCount(ShoppingCart shoppingCart, int count)
+		{
+			shoppingCart.Count += count;
+			return shoppingCart;
+		}
+	}
 }
