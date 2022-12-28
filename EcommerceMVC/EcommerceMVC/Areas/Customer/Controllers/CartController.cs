@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Infrastructure.Data;
 using Ecommerce.Infrastructure.Data.DTO;
 using Ecommerce.Infrastructure.Utilities;
+using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -95,8 +96,6 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				ShoppingCartDTO.OrderHeader.PaymentStatus = Constants.PaymentStatusPending;
-				ShoppingCartDTO.OrderHeader.OrderStatus = Constants.StatusPending;
 				ShoppingCartDTO.OrderHeader.OrderDate = DateTimeOffset.UtcNow;
 				ShoppingCartDTO.OrderHeader.EcommerceUserId = Convert.ToInt64(claim.Value);
 
@@ -106,7 +105,23 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 					cart.Price = price;
 					ShoppingCartDTO.OrderHeader.OrderTotal += price;
 				}
-				await _context.OrderHeaders.AddAsync(ShoppingCartDTO.OrderHeader, cancellationToken);
+
+                /* If it's a company user allow them to make order without redirecting them to the 
+				 * stripe, but company users are meant to pay between 30 days. */
+                EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(Convert.ToInt64(claim.Value));
+                /* Flag as Delayed Payment and Approved order if it is a company user, otherwise flag as pending */
+                if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
+                {
+                    ShoppingCartDTO.OrderHeader.PaymentStatus = Constants.PaymentStatusDelayedPayment;
+                    ShoppingCartDTO.OrderHeader.OrderStatus = Constants.StatusApproved;
+                }
+                if (ecommerceUser.CompanyId.GetValueOrDefault() == 0)
+				{
+                    ShoppingCartDTO.OrderHeader.PaymentStatus = Constants.PaymentStatusPending;
+                    ShoppingCartDTO.OrderHeader.OrderStatus = Constants.StatusPending;
+                }
+
+                await _context.OrderHeaders.AddAsync(ShoppingCartDTO.OrderHeader, cancellationToken);
 				await _context.SaveChangesAsync(cancellationToken);
 
 				foreach (var cart in ShoppingCartDTO.ListCart)
@@ -122,8 +137,13 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 					await _context.SaveChangesAsync(cancellationToken);
 				}
 
-				//stripe settings 
-				var domain = "https://localhost:44392/";
+                await transaction.CommitAsync(cancellationToken);
+                if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
+				{
+					return RedirectToAction("OrderConfirmation", "Cart", new { id = ShoppingCartDTO.OrderHeader.Id});
+				}
+                //stripe settings 
+                var domain = "https://localhost:44392/";
 				var options = new SessionCreateOptions
 				{
 					PaymentMethodTypes = new List<string>
@@ -178,18 +198,21 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		public async Task<IActionResult> OrderConfirmation(long id, CancellationToken cancellationToken)
 		{
 			int idint = Convert.ToUInt16(id);
-			OrderHeader orderHeader = await _context.OrderHeaders.FindAsync(id);
-			var service = new SessionService();
-			Session session = service.Get(orderHeader.SessionId);
+			OrderHeader orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(x=> x.Id.Equals(id));
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				/* Check the Stripe status */
-				if (session.PaymentStatus.ToLower().Equals("paid"))
+				if (orderHeader.PaymentStatus != Constants.PaymentStatusDelayedPayment)
 				{
-					UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
-					await _context.SaveChangesAsync(cancellationToken);
-				}
+                    var service = new SessionService();
+                    Session session = service.Get(orderHeader.SessionId);
+                    /* Check the Stripe status */
+                    if (session.PaymentStatus.ToLower().Equals("paid"))
+                    {
+                        UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
+                        await _context.SaveChangesAsync(cancellationToken);
+                    }
+                }
 
 				IEnumerable<ShoppingCart> shoppingCarts = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(
 					orderHeader.EcommerceUserId))
