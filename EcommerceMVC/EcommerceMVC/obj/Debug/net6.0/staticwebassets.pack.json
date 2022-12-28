@@ -9,8 +9,8 @@
       "PackagePath": "staticwebassets\\css\\LoginV.css"
     },
     {
-      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\css\\RegisterV.css",
-      "PackagePath": "staticwebassets\\css\\RegisterV.css"
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\css\\account.css",
+      "PackagePath": "staticwebassets\\css\\account.css"
     },
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\css\\cartstyle.css",
@@ -33,6 +33,10 @@
       "PackagePath": "staticwebassets\\images\\productImg\\3e61e690-b31b-41eb-bff3-89ac593cd673.jpg"
     },
     {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\img\\Login-amico.svg",
+      "PackagePath": "staticwebassets\\img\\Login-amico.svg"
+    },
+    {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\img\\Login-rafiki.svg",
       "PackagePath": "staticwebassets\\img\\Login-rafiki.svg"
     },
@@ -47,6 +51,10 @@
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\js\\general.js",
       "PackagePath": "staticwebassets\\js\\general.js"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\js\\order.js",
+      "PackagePath": "staticwebassets\\js\\order.js"
     },
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\js\\product.js",
@@ -171,6 +179,10 @@
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
       "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min-cosmo.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min-cosmo.css"
     },
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
