@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 namespace EcommerceMVC.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[AutoValidateAntiforgeryToken]
 	public class ProductController : Controller
 	{
 		private readonly EcommerceDbContext _context;

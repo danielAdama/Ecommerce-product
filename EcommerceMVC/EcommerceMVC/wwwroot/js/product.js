@@ -10,12 +10,12 @@ function loadDataTable() {
         .then(resp => resp.json())
         .then(data => {
             $('#tblData').DataTable({
-                data: data,
-                column: [
-                    { "data": "name", "width": "15%" },
-                    { "data": "description", "width": "15%" },
-                    { "data": "price", "width": "15%" },
-                    { "data": "category.name", "width": "15%" },
+                data: data.data,
+                columns: [
+                    { data : "name", "width": "15%" },
+                    { data : "description", "width": "15%" },
+                    { data : "price", "width": "15%" },
+                    { data : "category.name", "width": "15%" },
                     {
                         "data": "id",
                         "render": function (data) {
