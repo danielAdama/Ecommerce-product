@@ -108,7 +108,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
                 /* If it's a company user allow them to make order without redirecting them to the 
 				 * stripe, but company users are meant to pay between 30 days. */
-                EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(Convert.ToInt64(claim.Value), cancellationToken);
+                EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(Convert.ToInt64(claim.Value));
                 /* Flag as Delayed Payment and Approved order if it is a company user, otherwise flag as pending */
                 if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
                 {
@@ -209,7 +209,8 @@ namespace EcommerceMVC.Areas.Customer.Controllers
                     /* Check the Stripe status */
                     if (session.PaymentStatus.ToLower().Equals("paid"))
                     {
-                        UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
+						UpdateStripePaymentId(id, orderHeader.SessionId, session.PaymentIntentId);
+						UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
                         await _context.SaveChangesAsync(cancellationToken);
                     }
                 }
@@ -257,7 +258,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				var cart = await _context.ShoppingCarts.FindAsync(cartId, cancellationToken);
+				var cart = await _context.ShoppingCarts.FindAsync(cartId);
 				if (cart.Count <= 0)
 				{
 					_context.ShoppingCarts.Remove(cart);

@@ -6,6 +6,7 @@ using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading;
@@ -39,6 +40,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		}
 		
 		[HttpPost]
+		[Authorize(Roles =Constants.RoleAdmin+","+Constants.RoleEmployee)]
 		public async Task<IActionResult> UpdateOrderDetail(OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
 			var order = await _context.OrderHeaders.FirstOrDefaultAsync(x => x.Id.Equals(orderDTO.OrderHeader.Id), cancellationToken);
@@ -74,6 +76,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 		public async Task<IActionResult> StartProcessing(OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -94,6 +97,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 		public async Task<IActionResult> ShipOrder(OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
 			var orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(
@@ -105,6 +109,10 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				orderHeader.Carrier = orderDTO.OrderHeader.Carrier;
 				orderHeader.OrderStatus = Constants.StatusShipped;
 				orderHeader.ShippingDate = DateTimeOffset.UtcNow;
+				if(orderHeader.PaymentStatus == Constants.PaymentStatusDelayedPayment)
+				{
+					orderHeader.PaymentDueDate = DateTimeOffset.UtcNow.AddDays(30);
+				}
 				//_context.OrderHeaders.Update(orderHeader);
 				await _context.SaveChangesAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
@@ -119,6 +127,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			return View(orderDTO);
 		}
 		[HttpPost]
+		[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 		public async Task<IActionResult> CancelOrder(OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
 			var orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(
@@ -126,14 +135,25 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				orderHeader.TrackingNumber = orderDTO.OrderHeader.TrackingNumber;
-				orderHeader.Carrier = orderDTO.OrderHeader.Carrier;
-				orderHeader.OrderStatus = Constants.StatusShipped;
-				orderHeader.ShippingDate = DateTimeOffset.UtcNow;
-				//_context.OrderHeaders.Update(orderHeader);
+				/* When order is cancelled refund the customer, if payed */
+				if (orderHeader.PaymentStatus == Constants.PaymentStatusApproved)
+				{
+					var options = new RefundCreateOptions
+					{
+						Reason = RefundReasons.RequestedByCustomer,
+						PaymentIntent = orderHeader.PaymentIntentId,
+					};
+					var service = new RefundService();
+					Refund refund = await service.CreateAsync(options);
+					UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusRefunded);
+				}
+				if (orderHeader.PaymentStatus != Constants.PaymentStatusApproved)
+				{
+					UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusCancelled);
+				}
 				await _context.SaveChangesAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
-				TempData["success"] = "Order Shipped successfully";
+				TempData["success"] = "Order Cancelled successfully";
 				return RedirectToAction(nameof(Details), "Order", new { orderid = orderDTO.OrderHeader.Id });
 			}
 			catch (Exception ex)
