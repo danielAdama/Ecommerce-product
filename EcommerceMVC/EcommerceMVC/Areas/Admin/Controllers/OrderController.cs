@@ -118,6 +118,31 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			}
 			return View(orderDTO);
 		}
+		[HttpPost]
+		public async Task<IActionResult> CancelOrder(OrderDTO orderDTO, CancellationToken cancellationToken)
+		{
+			var orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(
+				x => x.Id.Equals(orderDTO.OrderHeader.Id), cancellationToken);
+			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			try
+			{
+				orderHeader.TrackingNumber = orderDTO.OrderHeader.TrackingNumber;
+				orderHeader.Carrier = orderDTO.OrderHeader.Carrier;
+				orderHeader.OrderStatus = Constants.StatusShipped;
+				orderHeader.ShippingDate = DateTimeOffset.UtcNow;
+				//_context.OrderHeaders.Update(orderHeader);
+				await _context.SaveChangesAsync(cancellationToken);
+				await transaction.CommitAsync(cancellationToken);
+				TempData["success"] = "Order Shipped successfully";
+				return RedirectToAction(nameof(Details), "Order", new { orderid = orderDTO.OrderHeader.Id });
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync(cancellationToken);
+				TempData["errorMessage"] = ex.Message;
+			}
+			return View(orderDTO);
+		}
 
 		private void UpdateStatus(long id, string orderStatus, string? paymentStatus = null)
 		{

@@ -126,8 +126,7 @@
 								<div class="col-9">
 									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
-										<input asp-for="OrderHeader.Carrier" type="text" class="form-control" />
-										<span asp-validation-for="OrderHeader.Carrier" class="text-danger"></span>
+										<input asp-for="OrderHeader.Carrier" id="carrier" type="text" class="form-control" />
 									}
 									else
 									{
@@ -140,8 +139,7 @@
 								<div class="col-9">
 									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
-										<input asp-for="OrderHeader.TrackingNumber" type="text" class="form-control" />
-										<span asp-validation-for="OrderHeader.TrackingNumber" class="text-danger"></span>
+										<input asp-for="OrderHeader.TrackingNumber" id="trackingNumber" type="text" class="form-control" />
 									}
 									else
 									{
