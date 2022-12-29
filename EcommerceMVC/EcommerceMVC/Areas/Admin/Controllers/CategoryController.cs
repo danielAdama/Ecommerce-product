@@ -1,11 +1,13 @@
 ﻿using Ecommerce.Infrastructure.Services.Interface;
+using Ecommerce.Infrastructure.Utilities;
 using EcommerceMVC.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-	[AutoValidateAntiforgeryToken]
+	[Authorize(Roles = Constants.RoleAdmin)]
 	public class CategoryController : Controller
 	{
 		private readonly ICategoryRepository _categoryRepository;

@@ -32,7 +32,7 @@ namespace EcommerceMVC.Services.Infrastructure.Auth
 
             services.ConfigureApplicationCookie(options =>
             {
-                //options.ExpireTimeSpan = TimeSpan.FromDays(365 * 100);
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
                 options.LoginPath = "/Account/Identity/Login";
                 options.LogoutPath = "/Account/Identity/LogOut";
                 options.AccessDeniedPath = "/Account/Identity/AccessDenied";

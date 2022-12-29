@@ -1,6 +1,33 @@
-﻿
+﻿var dataTable;
+
 $(document).ready(function () {
-    fetch("https://localhost:44392/Admin/Order/GetAll")
+    var url = window.location.search;
+    if (url.includes("inprocess")) {
+        loadDataTable("inprocess")
+    }
+    else {
+        if (url.includes("completed")) {
+            loadDataTable("completed")
+        }
+        else {
+            if (url.includes("pending")) {
+                loadDataTable("pending")
+            }
+            else {
+                if (url.includes("approved")) {
+                    loadDataTable("approved")
+                }
+                else {
+                    loadDataTable("all")
+                }
+            }
+        }
+    }
+});
+
+
+function loadDataTable(status) {
+    dataTable = fetch("https://localhost:44392/Admin/Order/GetAll?status=" + status)
         .then(resp => resp.json())
         .then(data => {
             console.log(data.data)
@@ -25,7 +52,7 @@ $(document).ready(function () {
                         },
                         "width": "15%"
                     },
-                    ],
-                })
+                ],
+            })
         })
-});
+}

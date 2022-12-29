@@ -1,14 +1,17 @@
 ﻿using Ecommerce.Infrastructure.Data;
 using Ecommerce.Infrastructure.Data.DTO;
 using Ecommerce.Infrastructure.Services.Interface;
+using Ecommerce.Infrastructure.Utilities;
 using EcommerceMVC.Services.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CompanyController : Controller
+	[Authorize(Roles = Constants.RoleAdmin)]
+	public class CompanyController : Controller
     {
         private readonly EcommerceDbContext _context;
 

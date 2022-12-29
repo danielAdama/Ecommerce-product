@@ -92,52 +92,51 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				Convert.ToInt64(claim.Value)))
 				.Include(u => u.Product)
 				.ToListAsync(cancellationToken);
-            
+
+			ShoppingCartDTO.OrderHeader.OrderDate = DateTimeOffset.UtcNow;
+			ShoppingCartDTO.OrderHeader.EcommerceUserId = Convert.ToInt64(claim.Value);
+
+			foreach (var cart in ShoppingCartDTO.ListCart)
+			{
+				var price = (cart.Count * cart.Product.Price);
+				cart.Price = price;
+				ShoppingCartDTO.OrderHeader.OrderTotal += price;
+			}
+
+			/* If it's a company user allow them to make order without redirecting them to the 
+			 * stripe, but company users are meant to pay between 30 days. */
+			EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(Convert.ToInt64(claim.Value));
+			/* Flag as Delayed Payment and Approved order if it is a company user, otherwise flag as pending */
+			if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
+			{
+				ShoppingCartDTO.OrderHeader.PaymentStatus = Constants.PaymentStatusDelayedPayment;
+				ShoppingCartDTO.OrderHeader.OrderStatus = Constants.StatusApproved;
+			}
+			if (ecommerceUser.CompanyId.GetValueOrDefault() == 0)
+			{
+				ShoppingCartDTO.OrderHeader.PaymentStatus = Constants.PaymentStatusPending;
+				ShoppingCartDTO.OrderHeader.OrderStatus = Constants.StatusPending;
+			}
+
+			await _context.OrderHeaders.AddAsync(ShoppingCartDTO.OrderHeader, cancellationToken);
+			await _context.SaveChangesAsync(cancellationToken);
+
+			foreach (var cart in ShoppingCartDTO.ListCart)
+			{
+				OrderDetail orderDetail = new()
+				{
+					ProductId = cart.ProductId,
+					OrderId = ShoppingCartDTO.OrderHeader.Id,
+					Price = cart.Price,
+					Count = cart.Count
+				};
+				await _context.OrderDetails.AddAsync(orderDetail, cancellationToken);
+				await _context.SaveChangesAsync(cancellationToken);
+			}
+
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				ShoppingCartDTO.OrderHeader.OrderDate = DateTimeOffset.UtcNow;
-				ShoppingCartDTO.OrderHeader.EcommerceUserId = Convert.ToInt64(claim.Value);
-
-				foreach (var cart in ShoppingCartDTO.ListCart)
-				{
-					var price = (cart.Count * cart.Product.Price);
-					cart.Price = price;
-					ShoppingCartDTO.OrderHeader.OrderTotal += price;
-				}
-
-                /* If it's a company user allow them to make order without redirecting them to the 
-				 * stripe, but company users are meant to pay between 30 days. */
-                EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(Convert.ToInt64(claim.Value));
-                /* Flag as Delayed Payment and Approved order if it is a company user, otherwise flag as pending */
-                if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
-                {
-                    ShoppingCartDTO.OrderHeader.PaymentStatus = Constants.PaymentStatusDelayedPayment;
-                    ShoppingCartDTO.OrderHeader.OrderStatus = Constants.StatusApproved;
-                }
-                if (ecommerceUser.CompanyId.GetValueOrDefault() == 0)
-				{
-                    ShoppingCartDTO.OrderHeader.PaymentStatus = Constants.PaymentStatusPending;
-                    ShoppingCartDTO.OrderHeader.OrderStatus = Constants.StatusPending;
-                }
-
-                await _context.OrderHeaders.AddAsync(ShoppingCartDTO.OrderHeader, cancellationToken);
-				await _context.SaveChangesAsync(cancellationToken);
-
-				foreach (var cart in ShoppingCartDTO.ListCart)
-				{
-					OrderDetail orderDetail = new()
-					{
-						ProductId = cart.ProductId,
-						OrderId = ShoppingCartDTO.OrderHeader.Id,
-						Price = cart.Price,
-						Count = cart.Count
-					};
-					await _context.OrderDetails.AddAsync(orderDetail, cancellationToken);
-					await _context.SaveChangesAsync(cancellationToken);
-				}
-
-                await transaction.CommitAsync(cancellationToken);
                 if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
 				{
 					return RedirectToAction("OrderConfirmation", "Cart", new { id = ShoppingCartDTO.OrderHeader.Id});
@@ -178,7 +177,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				}
 				
 				var service = new SessionService();
-				Session session = service.Create(options);
+				Session session = await service.CreateAsync(options);
 				//ShoppingCartDTO.OrderHeader.SessionId = session.Id;
 				//ShoppingCartDTO.OrderHeader.PaymentIntentId = session.PaymentIntentId;
 				UpdateStripePaymentId(ShoppingCartDTO.OrderHeader.Id, session.Id, session.PaymentIntentId);
@@ -209,7 +208,8 @@ namespace EcommerceMVC.Areas.Customer.Controllers
                     /* Check the Stripe status */
                     if (session.PaymentStatus.ToLower().Equals("paid"))
                     {
-                        UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
+						UpdateStripePaymentId(id, orderHeader.SessionId, session.PaymentIntentId);
+						UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
                         await _context.SaveChangesAsync(cancellationToken);
                     }
                 }
@@ -307,6 +307,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		{
 			var orders = _context.OrderHeaders.Find(id);
 
+			orders.PaymentDate = DateTimeOffset.UtcNow;
 			orders.SessionId = sessionId;
 			orders.PaymentIntentId = paymentIntentId;
 		}

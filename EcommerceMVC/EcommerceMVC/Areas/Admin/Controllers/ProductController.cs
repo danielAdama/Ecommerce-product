@@ -1,8 +1,10 @@
 ﻿using Ecommerce.Infrastructure.Data.DTO;
 using Ecommerce.Infrastructure.Services.Implementation;
 using Ecommerce.Infrastructure.Services.Interface;
+using Ecommerce.Infrastructure.Utilities;
 using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EcommerceMVC.Areas.Admin.Controllers
 {
 	[Area("Admin")]
-	[AutoValidateAntiforgeryToken]
+	[Authorize(Roles = Constants.RoleAdmin)]
 	public class ProductController : Controller
 	{
 		private readonly EcommerceDbContext _context;
