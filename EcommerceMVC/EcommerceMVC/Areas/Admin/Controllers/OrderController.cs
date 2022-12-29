@@ -92,41 +92,21 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			return new StatusCodeResult(303);
 		}
 
-		public async Task<IActionResult> PaymentConfirmation(long id, CancellationToken cancellationToken)
+		public async Task<IActionResult> PaymentConfirmation(long orderHeaderid, CancellationToken cancellationToken)
 		{
-			int idint = Convert.ToUInt16(id);
-			OrderHeader orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(x => x.Id.Equals(id));
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-			try
+			int idint = Convert.ToUInt16(orderHeaderid);
+			OrderHeader orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(x => x.Id.Equals(orderHeaderid));
+			if (orderHeader.PaymentStatus == Constants.PaymentStatusDelayedPayment)
 			{
-				if (orderHeader.PaymentStatus == Constants.PaymentStatusDelayedPayment)
+				var service = new SessionService();
+				Session session = service.Get(orderHeader.SessionId);
+				/* Check the Stripe status */
+				if (session.PaymentStatus.ToLower().Equals("paid"))
 				{
-					var service = new SessionService();
-					Session session = service.Get(orderHeader.SessionId);
-					/* Check the Stripe status */
-					if (session.PaymentStatus.ToLower().Equals("paid"))
-					{
-						UpdateStripePaymentId(id, orderHeader.SessionId, session.PaymentIntentId);
-						UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
-						await _context.SaveChangesAsync(cancellationToken);
-					}
+					UpdateStripePaymentId(orderHeaderid, orderHeader.SessionId, session.PaymentIntentId);
+					UpdateStatus(orderHeaderid, orderHeader.OrderStatus, Constants.PaymentStatusApproved);
+					await _context.SaveChangesAsync(cancellationToken);
 				}
-
-				IEnumerable<ShoppingCart> shoppingCarts = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(
-					orderHeader.EcommerceUserId))
-					.ToListAsync(cancellationToken);
-
-				/* After processing clear the shopping cart */
-				if (shoppingCarts.Any())
-					_context.ShoppingCarts.RemoveRange(shoppingCarts);
-				await _context.SaveChangesAsync(cancellationToken);
-				await transaction.CommitAsync(cancellationToken);
-			}
-			catch (Exception ex)
-			{
-				await transaction.RollbackAsync(cancellationToken);
-				TempData["errorMessage"] = ex.Message;
-				return RedirectToAction("Index", "Home");
 			}
 			return View(idint);
 		}
