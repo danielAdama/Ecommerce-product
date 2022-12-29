@@ -2,10 +2,12 @@
 using Ecommerce.Infrastructure.Data.DTO;
 using Ecommerce.Infrastructure.Services.Interface;
 using Ecommerce.Infrastructure.Utilities;
+using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Helpers.Mail;
 
 namespace EcommerceMVC.Areas.Admin.Controllers
 {
@@ -83,16 +85,20 @@ namespace EcommerceMVC.Areas.Admin.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(long id)
         {
-            var company = await _context.Companies.FirstOrDefaultAsync(x => x.Id == id);
+            var company = await _context.Companies.FindAsync(id);
 
             if (company == null)
             {
                 return Json(new { success = false, message = "Error while deleting" });
             }
+            if (await _context.EcommerceUsers.AnyAsync(x => x.CompanyId.Equals(company.Id)))
+            {
+                return Json(new { success = false, message = "Cannot delete this company because it has active user" });
+            }
 
             _context.Companies.Remove(company);
             await _context.SaveChangesAsync();
-            return Json(new { success = true, message = "Deleting Successful" });
+            return Json(new { success = true, message = "Delete Successful" });
         }
         #endregion
 

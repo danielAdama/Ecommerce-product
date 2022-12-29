@@ -46,23 +46,16 @@ function Delete(url) {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        console.log(url)
+    }).then(async (result) => {
         if (result.isConfirmed) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                success: function (data) {
-                    console.log(data)
-                    if (data.success) {
-                        dataTable.ajax.reload();
-                        toastr.success(data.message);
-                    }
-                    else {
-                        toastr.error(data.message);
-                    }
+            function () {
+                const response = await fetch(url,
+                    { method: 'DELETE' });
+                if (response.ok) {
+                    dataTable.ajax.reload();
+                    toastr.success("successful");
+                } else {
+                    toastr.error("something went wrong");
                 }
-                })
-        }
-    })
+            }
 }

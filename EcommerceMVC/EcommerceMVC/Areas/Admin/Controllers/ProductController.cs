@@ -124,7 +124,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		[HttpDelete]
 		public async Task<IActionResult> Delete(long id)
 		{
-			var obj = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+			var obj = await _context.Products.FirstOrDefaultAsync(x => x.Id.Equals(id));
 
 			if (obj == null)
 			{
@@ -132,6 +132,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			}
 
 			var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), obj.ImageUrl.TrimStart('\\'));
+
 			if (System.IO.File.Exists(oldImagePath))
 			{
 				System.IO.File.Delete(oldImagePath);
