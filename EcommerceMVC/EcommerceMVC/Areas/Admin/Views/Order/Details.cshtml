@@ -1,9 +1,10 @@
-﻿
+﻿@model Ecommerce.Infrastructure.Data.DTO.OrderDTO;
+@using Ecommerce.Infrastructure.Utilities;
+@using System.Globalization;
 
 <form method="post">
 	<input asp-for="OrderHeader.Id" hidden />
-	<br />
-	<div class="container">
+	<div class="container pt-4">
 		<div class="card">
 			<div class="card-header bg-dark text-light ml-0">
 				<div class="container row">
@@ -27,7 +28,7 @@
 							<div class="row my-1">
 								<div class="col-3">Name</div>
 								<div class="col-9">
-									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
 										<input asp-for="OrderHeader.Name" type="text" class="form-control" />
 										<span asp-validation-for="OrderHeader.Name" class="text-danger"></span>
@@ -41,7 +42,7 @@
 							<div class="row my-1">
 								<div class="col-3">Phone</div>
 								<div class="col-9">
-									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
 										<input asp-for="OrderHeader.PhoneNumber" type="text" class="form-control" />
 										<span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
@@ -55,7 +56,7 @@
 							<div class="row my-1">
 								<div class="col-3">Address</div>
 								<div class="col-9">
-									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
 										<input asp-for="OrderHeader.StreetAddress" type="text" class="form-control" />
 										<span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
@@ -69,7 +70,7 @@
 							<div class="row my-1">
 								<div class="col-3">City</div>
 								<div class="col-9">
-									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
 										<input asp-for="OrderHeader.City" type="text" class="form-control" />
 										<span asp-validation-for="OrderHeader.City" class="text-danger"></span>
@@ -83,7 +84,7 @@
 							<div class="row my-1">
 								<div class="col-3">State</div>
 								<div class="col-9">
-									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
 										<input asp-for="OrderHeader.State" type="text" class="form-control" />
 										<span asp-validation-for="OrderHeader.State" class="text-danger"></span>
@@ -97,7 +98,7 @@
 							<div class="row my-1">
 								<div class="col-3">Zip Code</div>
 								<div class="col-9">
-									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
 										<input asp-for="OrderHeader.PostalCode" type="text" class="form-control" />
 										<span asp-validation-for="OrderHeader.PostalCode" class="text-danger"></span>
@@ -111,23 +112,22 @@
 							<div class="row my-1">
 								<div class="col-3">Email</div>
 								<div class="col-9">
-									<input asp-for="OrderHeader.ApplicationUser.Email" readonly type="text" class="form-control" />
+									<input asp-for="OrderHeader.EcommerceUser.Email" readonly type="text" class="form-control" />
 								</div>
 							</div>
 							<div class="row my-1">
 								<div class="col-3">Order Date</div>
 								<div class="col-9">
-
-									<input value="@Model.OrderHeader.OrderDate.ToShortDateString()" readonly type="text" class="form-control" />
-
+									<input value="@Model.OrderHeader.OrderDate.ToString("dd/M/yyyy HH:mm:ss", CultureInfo.InvariantCulture)" readonly type="text" class="form-control" />
 								</div>
 							</div>
 							<div class="row my-1">
 								<div class="col-3">Carrier</div>
 								<div class="col-9">
-									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
-										<input asp-for="OrderHeader.Carrier" id="carrier" type="text" class="form-control" />
+										<input asp-for="OrderHeader.Carrier" type="text" class="form-control" />
+										<span asp-validation-for="OrderHeader.Carrier" class="text-danger"></span>
 									}
 									else
 									{
@@ -138,9 +138,10 @@
 							<div class="row my-1">
 								<div class="col-3">Tracking</div>
 								<div class="col-9">
-									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+									@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 									{
-										<input asp-for="OrderHeader.TrackingNumber" id="trackingNumber" type="text" class="form-control" />
+										<input asp-for="OrderHeader.TrackingNumber" type="text" class="form-control" />
+										<span asp-validation-for="OrderHeader.TrackingNumber" class="text-danger"></span>
 									}
 									else
 									{
@@ -151,10 +152,10 @@
 							<div class="row my-1">
 								<div class="col-3">Shipping Date</div>
 								<div class="col-9">
-									<input value="@Model.OrderHeader.ShippingDate.ToShortDateString()" type="text" readonly class="form-control" />
+									<input value="@Model.OrderHeader.ShippingDate.ToString("dd/M/yyyy HH:mm:ss", CultureInfo.InvariantCulture)" type="text" readonly class="form-control" />
 								</div>
 							</div>
-							@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+							@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 							{
 								<div class="row my-1">
 									<div class="col-3">Session ID</div>
@@ -174,7 +175,7 @@
 								{
 									<div class="col-3">Payment Due Date</div>
 									<div class="col-9">
-										<input value="@Model.OrderHeader.PaymentDueDate.ToShortDateString()"
+										<input value="@Model.OrderHeader.PaymentDueDate" @*.ToString("dd/M/yyyy HH:mm:ss", CultureInfo.InvariantCulture) Include this when payment due date is not null*@
 										   readonly type="text" class="form-control" />
 									</div>
 								}
@@ -182,7 +183,7 @@
 								{
 									<div class="col-3">Payment Date</div>
 									<div class="col-9">
-										<input value="@Model.OrderHeader.PaymentDate.ToShortDateString()"
+										<input value="@Model.OrderHeader.PaymentDueDate" @*.ToString("dd/M/yyyy HH:mm:ss", CultureInfo.InvariantCulture)*@
 										   readonly id="paymentDate" type="text" class="form-control" />
 									</div>
 								}
@@ -194,16 +195,12 @@
 								</div>
 							</div>
 							<input type="submit" asp-action="UpdateOrderDetail" class="btn btn-warning form-control my-1" value="Update Order Details" />
-
-
-
 						</div>
 						<div class="col-12 col-lg-5 offset-lg-1">
 							<h4 class="d-flex justify-content-between align-items-center mb-3">
 								<span class="text-primary">Order Summary</span>
 							</h4>
 							<label class="btn btn-outline-primary form-control my-2">Order Status - @Model.OrderHeader.OrderStatus</label>
-
 							<ul class="list-group mb-3">
 								@foreach (var detail in Model.OrderDetail)
 								{
@@ -211,12 +208,12 @@
 										<div class="row container">
 											<div class="col-8">
 
-												<h6 class="my-0 text-primary">@detail.Product.Title</h6>
-												<small class="text-muted">Price : @detail.Price.ToString("c")</small><br />
+												<h6 class="my-0 text-primary">@detail.Product.Name</h6>
+												<small class="text-muted">Price : @detail.Price.ToString("n")</small><br />
 												<small class="text-muted">Quantity : @detail.Count</small>
 											</div>
 											<div class="col-4 text-end">
-												<p class="text-success">@((detail.Count * detail.Price).ToString("c"))</p>
+												<p class="text-success">@(detail.Price.ToString("n"))</p>
 											</div>
 										</div>
 									</li>
@@ -227,31 +224,31 @@
 											<h5 class="text-white">TOTAL </h5>
 										</div>
 										<div class="col-6 text-end">
-											<h5 class="text-white">@Model.OrderHeader.OrderTotal.ToString("c")</h5>
+											<h5 class="text-white">@Model.OrderHeader.OrderTotal.ToString("n")</h5>
 										</div>
 									</div>
 								</li>
 							</ul>
-							@if (Model.OrderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment &&
-									Model.OrderHeader.OrderStatus == SD.StatusShipped)
+							@if (Model.OrderHeader.PaymentStatus == Constants.PaymentStatusDelayedPayment &&
+										Model.OrderHeader.OrderStatus == Constants.StatusShipped)
+								{
+									<input type="submit" class="btn btn-success form-control my-1" value="Pay Now" />
+								}
+							@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 							{
-								<input type="submit" class="btn btn-success form-control my-1" value="Pay Now" />
-							}
-							@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
-							{
-								if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
+								if (Model.OrderHeader.OrderStatus == Constants.StatusApproved)
 								{
 									<input type="submit" asp-action="StartProcessing" class="btn btn-primary form-control my-1" value="Start Processing" />
 								}
-								if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
+								if (Model.OrderHeader.OrderStatus == Constants.StatusInProcess)
 								{
 									<input type="submit" onclick="return validateInput()"
 								   asp-action="ShipOrder" class="btn btn-primary form-control my-1" value="Ship Order" />
 								}
 
-								@if (Model.OrderHeader.OrderStatus != SD.StatusRefunded &&
-										Model.OrderHeader.OrderStatus != SD.StatusCancelled &&
-										Model.OrderHeader.OrderStatus != SD.StatusShipped)
+								@if (Model.OrderHeader.OrderStatus != Constants.StatusRefunded &&
+										Model.OrderHeader.OrderStatus != Constants.StatusCancelled &&
+										Model.OrderHeader.OrderStatus != Constants.StatusShipped)
 								{
 									<input type="submit" asp-action="CancelOrder" class="btn btn-danger form-control my-1" value="Cancel Order" />
 								}

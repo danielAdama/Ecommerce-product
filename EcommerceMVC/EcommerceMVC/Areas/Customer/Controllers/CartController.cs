@@ -108,7 +108,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
                 /* If it's a company user allow them to make order without redirecting them to the 
 				 * stripe, but company users are meant to pay between 30 days. */
-                EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(Convert.ToInt64(claim.Value));
+                EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(Convert.ToInt64(claim.Value), cancellationToken);
                 /* Flag as Delayed Payment and Approved order if it is a company user, otherwise flag as pending */
                 if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
                 {
@@ -307,6 +307,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		{
 			var orders = _context.OrderHeaders.Find(id);
 
+			orders.PaymentDate = DateTimeOffset.UtcNow;
 			orders.SessionId = sessionId;
 			orders.PaymentIntentId = paymentIntentId;
 		}
