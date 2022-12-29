@@ -3,7 +3,8 @@
     margin: 0;
 }
 main {
-    min-height: 700px
+    padding-top: 40px;
+    padding-bottom: 90px !important;
 }
 .description_wrapper{
     width: 400px;
