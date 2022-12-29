@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
+using Stripe.Checkout;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading;
@@ -39,6 +40,97 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			return View(orderDTO);
 		}
 		
+		[HttpPost]
+		[ActionName("Details")]
+		public async Task<IActionResult> DetailsPayNow(OrderDTO orderDTO, CancellationToken cancellationToken)
+		{
+			orderDTO.OrderHeader = await _context.OrderHeaders.Include(u => u.EcommerceUser).FirstOrDefaultAsync(
+					x => x.Id.Equals(orderDTO.OrderHeader.Id));
+			orderDTO.OrderDetail = await _context.OrderDetails.Where(x => x.OrderId.Equals(orderDTO.OrderHeader.Id)).Include(u => u.Product)
+					.ToListAsync(cancellationToken);
+
+			//stripe settings 
+			var domain = "https://localhost:44392/";
+			var options = new SessionCreateOptions
+			{
+				PaymentMethodTypes = new List<string>
+					{
+					  "card",
+					},
+				LineItems = new List<SessionLineItemOptions>(),
+				Mode = "payment",
+				SuccessUrl = domain + $"admin/order/PaymentConfirmation?orderHeaderid={orderDTO.OrderHeader.Id}",
+				CancelUrl = domain + $"admin/order/details?orderid={orderDTO.OrderHeader.Id}",
+			};
+
+			foreach (var item in orderDTO.OrderDetail)
+			{
+
+				var sessionLineItem = new SessionLineItemOptions
+				{
+					PriceData = new SessionLineItemPriceDataOptions
+					{
+						/* Convert Naira to dollars inorder to use stripe */
+						UnitAmount = ((Convert.ToInt64(item.Price / 446.63) * 100) / item.Count),// Convert price from cent 20.00 -> 2000
+						Currency = "usd",
+						ProductData = new SessionLineItemPriceDataProductDataOptions
+						{
+							Name = item.Product.Name
+						},
+
+					},
+					Quantity = item.Count,
+				};
+				options.LineItems.Add(sessionLineItem);
+			}
+
+			var service = new SessionService();
+			Session session = await service.CreateAsync(options);
+			UpdateStripePaymentId(orderDTO.OrderHeader.Id, session.Id, session.PaymentIntentId);
+			await _context.SaveChangesAsync(cancellationToken);
+			Response.Headers.Add("Location", session.Url);
+			return new StatusCodeResult(303);
+		}
+
+		public async Task<IActionResult> PaymentConfirmation(long id, CancellationToken cancellationToken)
+		{
+			int idint = Convert.ToUInt16(id);
+			OrderHeader orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(x => x.Id.Equals(id));
+			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			try
+			{
+				if (orderHeader.PaymentStatus == Constants.PaymentStatusDelayedPayment)
+				{
+					var service = new SessionService();
+					Session session = service.Get(orderHeader.SessionId);
+					/* Check the Stripe status */
+					if (session.PaymentStatus.ToLower().Equals("paid"))
+					{
+						UpdateStripePaymentId(id, orderHeader.SessionId, session.PaymentIntentId);
+						UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
+						await _context.SaveChangesAsync(cancellationToken);
+					}
+				}
+
+				IEnumerable<ShoppingCart> shoppingCarts = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(
+					orderHeader.EcommerceUserId))
+					.ToListAsync(cancellationToken);
+
+				/* After processing clear the shopping cart */
+				if (shoppingCarts.Any())
+					_context.ShoppingCarts.RemoveRange(shoppingCarts);
+				await _context.SaveChangesAsync(cancellationToken);
+				await transaction.CommitAsync(cancellationToken);
+			}
+			catch (Exception ex)
+			{
+				await transaction.RollbackAsync(cancellationToken);
+				TempData["errorMessage"] = ex.Message;
+				return RedirectToAction("Index", "Home");
+			}
+			return View(idint);
+		}
+
 		[HttpPost]
 		[Authorize(Roles =Constants.RoleAdmin+","+Constants.RoleEmployee)]
 		public async Task<IActionResult> UpdateOrderDetail(OrderDTO orderDTO, CancellationToken cancellationToken)
@@ -164,6 +256,14 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			return View(orderDTO);
 		}
 
+		private void UpdateStripePaymentId(long id, string sessionId, string paymentIntentId)
+		{
+			var orders = _context.OrderHeaders.Find(id);
+
+			orders.PaymentDate = DateTimeOffset.UtcNow;
+			orders.SessionId = sessionId;
+			orders.PaymentIntentId = paymentIntentId;
+		}
 		private void UpdateStatus(long id, string orderStatus, string? paymentStatus = null)
 		{
 			var orders = _context.OrderHeaders.Find(id);
