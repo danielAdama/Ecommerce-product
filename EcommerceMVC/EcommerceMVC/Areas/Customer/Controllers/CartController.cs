@@ -257,7 +257,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				var cart = await _context.ShoppingCarts.FindAsync(cartId);
+				var cart = await _context.ShoppingCarts.FindAsync(cartId, cancellationToken);
 				if (cart.Count <= 0)
 				{
 					_context.ShoppingCarts.Remove(cart);
