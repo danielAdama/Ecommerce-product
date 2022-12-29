@@ -16,13 +16,13 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 	public class ProductController : Controller
 	{
 		private readonly EcommerceDbContext _context;
-		private readonly ICategoryRepository _categoryRepository;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-		public ProductController(EcommerceDbContext context, ICategoryRepository categoryRepository)
+        public ProductController(EcommerceDbContext context, IWebHostEnvironment hostEnvironment)
 		{
 			_context = context;
-			_categoryRepository = categoryRepository;
-		}
+            _hostEnvironment = hostEnvironment;
+        }
 
 		public ViewResult Index()
 		{
@@ -56,7 +56,8 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Upsert(ProductDTO obj, IFormFile file, CancellationToken cancellationToken)
 		{
-			var fileName = Guid.NewGuid().ToString().ToLower();
+            string wwwRootPath = _hostEnvironment.WebRootPath;
+            var fileName = Guid.NewGuid().ToString().ToLower();
 			var fileExt = file.FileName.ToString().Split(".")[1];
 			var allowedExt = new string[] { "jpg", "jpeg", "png" };
 			if (!allowedExt.Contains(fileExt))
@@ -64,14 +65,15 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				TempData["success"] = "Invalid File Extension";
 				RedirectToAction("Index");
 			}
-			var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images\productImg");
+			//var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images\productImg");
+			var filePath = Path.Combine(wwwRootPath, @"images\productImg");
 			if (!Directory.Exists(filePath))
 			{
 				Directory.CreateDirectory(filePath);
 			}
 			if (obj.Product.ImageUrl != null)
 			{
-				var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), obj.Product.ImageUrl.TrimStart('\\'));
+				var oldImagePath = Path.Combine(wwwRootPath, obj.Product.ImageUrl.TrimStart('\\'));
 				if (System.IO.File.Exists(oldImagePath))
 				{
 					System.IO.File.Delete(oldImagePath);
@@ -80,16 +82,16 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				string path = $"{@"wwwroot\images\productImg\"}{fileName}.{fileExt}";
+				string path = $"{@"\images\productImg\"}{fileName}.{fileExt}";
 				if (file.Length > 0)
 				{
-					obj.Product.ImageUrl = path.Replace("wwwroot","");
-					using (FileStream stream = new(path, FileMode.Create))
+					obj.Product.ImageUrl = path;
+					using (FileStream stream = new(Path.Combine(filePath,$"{fileName}.{fileExt}"), FileMode.Create))
 					{
 						await file.CopyToAsync(stream, cancellationToken);
 					}
 
-					var fileStream = System.IO.File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+					var fileStream = System.IO.File.Open(Path.Combine(filePath, $"{fileName}.{fileExt}"), FileMode.Open, FileAccess.Read, FileShare.Read);
 				}
 				if (obj.Product.Id != 0)
 				{
@@ -103,7 +105,8 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				await _context.SaveChangesAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 				TempData["success"] = "Product created successfully";
-			}
+                return RedirectToAction("Index");
+            }
 			catch (Exception ex)
 			{
 				await transaction.RollbackAsync(cancellationToken);
@@ -131,14 +134,12 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				return Json(new { success = false, message = "Error while deleting" });
 			}
 
-			var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), obj.ImageUrl.TrimStart('\\'));
-
-			if (System.IO.File.Exists(oldImagePath))
-			{
-				System.IO.File.Delete(oldImagePath);
-			}
-
-			_context.Products.Remove(obj);
+            var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, obj.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+            _context.Products.Remove(obj);
 			await _context.SaveChangesAsync();
 			return Json(new { success = true, message = "Deleting Successful" });
 		}

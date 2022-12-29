@@ -47,16 +47,30 @@ function Delete(url) {
         confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
         if (result.isConfirmed) {
-            function () {
-                const response = await fetch(url,
-                    { method: 'DELETE' });
-                if (response.ok) {
-                    dataTable.ajax.reload();
-                    toastr.success("successful");
-                } else {
-                    toastr.error("something went wrong");
-                }
+            console.log(result);
+            const response = await fetch(url, { method: 'DELETE' });
+            console.log(response)
+            if (response.ok) {
+                dataTable.ajax.reload();
+                toastr.success("successful");
+            } else {
+                toastr.error("something went wrong");
             }
+
+            //$.ajax({
+            //    url: url,
+            //    type: 'DELETE',
+            //    success: function (data) {
+            //        console.log(data)
+            //        if (data.success) {
+            //            dataTable.ajax.reload();
+            //            toastr.success(data.message);
+            //        }
+            //        else {
+            //            toastr.error(data.message);
+            //        }
+            //    }
+            //    })
         }
     })
 }

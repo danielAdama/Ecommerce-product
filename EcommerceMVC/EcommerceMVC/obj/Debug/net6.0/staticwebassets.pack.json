@@ -25,8 +25,8 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\3629eacb-2abb-47d7-a180-dfc8f2fc35a4.jpg",
-      "PackagePath": "staticwebassets\\images\\productImg\\3629eacb-2abb-47d7-a180-dfc8f2fc35a4.jpg"
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\0053a6eb-2d91-484d-b65d-202262c1e865.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\0053a6eb-2d91-484d-b65d-202262c1e865.jpg"
     },
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\3e61e690-b31b-41eb-bff3-89ac593cd673.jpg",
@@ -303,6 +303,22 @@
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\wwwroot\\images\\productImg\\077a1e79-c571-485b-a514-07304bf0433c.jpg",
+      "PackagePath": "staticwebassets\\wwwroot\\images\\productImg\\077a1e79-c571-485b-a514-07304bf0433c.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\wwwroot\\images\\productImg\\40f83862-f473-4028-a9a1-75c0c40d22e4.jpg",
+      "PackagePath": "staticwebassets\\wwwroot\\images\\productImg\\40f83862-f473-4028-a9a1-75c0c40d22e4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\wwwroot\\images\\productImg\\8c589ec3-5695-4684-9383-f9ae72d34419.jpg",
+      "PackagePath": "staticwebassets\\wwwroot\\images\\productImg\\8c589ec3-5695-4684-9383-f9ae72d34419.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\wwwroot\\images\\productImg\\ee6c84b2-a98e-43c4-88c3-de47103e00c1.jpg",
+      "PackagePath": "staticwebassets\\wwwroot\\images\\productImg\\ee6c84b2-a98e-43c4-88c3-de47103e00c1.jpg"
     },
     {
       "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.EcommerceMVC.Microsoft.AspNetCore.StaticWebAssets.props",
