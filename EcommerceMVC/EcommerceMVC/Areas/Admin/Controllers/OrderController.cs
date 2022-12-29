@@ -37,6 +37,18 @@ namespace EcommerceMVC.Areas.Admin.Controllers
         };
             return View(orderDTO);
         }
+        public async Task<IActionResult> UpdateOrderDetail(long orderid, OrderDTO orderDTO)
+        {
+            orderDTO = new OrderDTO()
+            {
+                OrderHeader = await _context.OrderHeaders.Include(u => u.EcommerceUser).FirstOrDefaultAsync(
+                    x => x.Id.Equals(orderid)),
+                OrderDetail = await _context.OrderDetails.Where(x => x.OrderId.Equals(orderid)).Include(u => u.Product)
+                    .ToListAsync(),
+
+        };
+            return View(orderDTO);
+        }
 
         #region API CALLS
         [HttpGet]

@@ -230,10 +230,10 @@
 								</li>
 							</ul>
 							@if (Model.OrderHeader.PaymentStatus == Constants.PaymentStatusDelayedPayment &&
-										Model.OrderHeader.OrderStatus == Constants.StatusShipped)
-								{
-									<input type="submit" class="btn btn-success form-control my-1" value="Pay Now" />
-								}
+									Model.OrderHeader.OrderStatus == Constants.StatusShipped)
+							{
+								<input type="submit" class="btn btn-success form-control my-1" value="Pay Now" />
+							}
 							@if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 							{
 								if (Model.OrderHeader.OrderStatus == Constants.StatusApproved)

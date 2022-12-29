@@ -1,5 +1,4 @@
 ﻿using Ecommerce.Infrastructure.Data.DTO;
-using Ecommerce.Infrastructure.Services.Interface;
 using Ecommerce.Infrastructure.Utilities;
 using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
@@ -171,7 +170,7 @@ namespace EcommerceMVC.Areas.Account.Controllers
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(Index),"Home");
+            return RedirectToAction(nameof(Index),"Home", new { area = "Customer" });
         }
     }
 }
