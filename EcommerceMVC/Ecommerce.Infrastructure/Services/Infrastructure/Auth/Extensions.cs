@@ -1,4 +1,6 @@
-﻿using EcommerceMVC.Data;
+﻿using Ecommerce.Infrastructure.Services.Implementation;
+using Ecommerce.Infrastructure.Services.Interface;
+using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +40,8 @@ namespace EcommerceMVC.Services.Infrastructure.Auth
                 options.AccessDeniedPath = "/Account/Identity/AccessDenied";
                 options.SlidingExpiration = true;
             });
+
+            services.AddSingleton<IEmailSender, EmailSender>();
 
             return services;
         }

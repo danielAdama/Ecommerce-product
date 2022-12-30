@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Q13LTmQnz6/9TnOn9ERLKnl6awgsGd0T70x2bmkLW9T8CJ/y+jYtIhtx0Z7DkDFXZOhgnI2KIrrXhtBvZmBHhg==",
+  "dgSpecHash": "f/cqsq3DVmoGkpIBGEw3Z1LyF9kvgmmRZzStaSpxfOPMpB0WmngL8qjSnbfWSXZ2tW2G191+w1IsvSegRKyWAQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\EcommerceMVC.csproj",
   "expectedPackageFiles": [
@@ -74,7 +74,9 @@
     "C:\\Users\\DELL\\.nuget\\packages\\microsoft.entityframeworkcore.relational.design\\1.1.0\\microsoft.entityframeworkcore.relational.design.1.1.0.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\6.0.0\\microsoft.extensions.caching.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\microsoft.extensions.caching.memory\\6.0.1\\microsoft.extensions.caching.memory.6.0.1.nupkg.sha512",
+    "C:\\Users\\DELL\\.nuget\\packages\\microsoft.extensions.configuration\\6.0.1\\microsoft.extensions.configuration.6.0.1.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\6.0.0\\microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\DELL\\.nuget\\packages\\microsoft.extensions.configuration.binder\\6.0.0\\microsoft.extensions.configuration.binder.6.0.0.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\DELL\\.nuget\\packages\\microsoft.extensions.dependencymodel\\2.1.0\\microsoft.extensions.dependencymodel.2.1.0.nupkg.sha512",
