@@ -65,6 +65,10 @@
       "PackagePath": "staticwebassets\\img\\Login-rafiki.svg"
     },
     {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\img\\flowertest.jpg",
+      "PackagePath": "staticwebassets\\img\\flowertest.jpg"
+    },
+    {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\img\\lawn_leaf.jpg",
       "PackagePath": "staticwebassets\\img\\lawn_leaf.jpg"
     },
