@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Infrastructure.Data.DTO;
+using Ecommerce.Infrastructure.Services.Interface;
 using Ecommerce.Infrastructure.Utilities;
 using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
@@ -18,18 +19,21 @@ namespace EcommerceMVC.Areas.Account.Controllers
         private readonly UserManager<EcommerceUser> _userManager;
         private readonly SignInManager<EcommerceUser> _signInManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IEmailSender _emailSender;
 
         public IdentityController(
             EcommerceDbContext context,
             UserManager<EcommerceUser> userManager,
             SignInManager<EcommerceUser> signInManager,
-            RoleManager<ApplicationRole> roleManager
+            RoleManager<ApplicationRole> roleManager,
+             IEmailSender emailSender
         )
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _emailSender = emailSender;
         }
         public IActionResult Index()
         {
@@ -56,7 +60,7 @@ namespace EcommerceMVC.Areas.Account.Controllers
                     var passwordCheck = await _userManager.CheckPasswordAsync(user, loginDTO.Password);
                     if (!passwordCheck)
                     {
-                        TempData["errorMessage"] = "Wrong password. Please try again";
+                        TempData["errorMessage"] = "Wrong credentials. Please try again";
                         return View(loginDTO);
                     }
                     var result = await _signInManager.PasswordSignInAsync(user, loginDTO.Password, loginDTO.RememberMe, lockoutOnFailure: false);
