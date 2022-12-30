@@ -30,12 +30,15 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
         public async Task<IActionResult> Details(long productid, CancellationToken cancellationToken)
         {
+            var product = await _context.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == productid, cancellationToken);
             ShoppingCart cart = new()
             {
                 Count = 1,
                 ProductId = productid,
-                Product = await _context.Products.Include(x => x.Category).FirstOrDefaultAsync(x => x.Id == productid, cancellationToken)
-            };
+                Product = product,
+                Products = await _context.Products.Where(x => x.Category.Id.Equals(product.CategoryId) && x.Id!=productid).AsNoTracking()
+                .ToListAsync(cancellationToken)
+        };
             return View(cart);
         }
 

@@ -37,20 +37,24 @@
                                 <div>100+</div>
                             </div>
                         </div>*@
-                        <div class="row text-center pl-2" style="color:darkred; font-weight:bold">
-                            <div class="p-1 col-2 bg-light">
-                                <div>Price</div>
+                        <div class="d-flex gap-5">
+                        <div>
+                            <div class="pl-2" style="color:darkred; font-weight:bold">
+                                <div class="p-1 bg-primary">
+                                    <div>Price: N @Model.Product.Price.ToString("n")</div>
+                                </div>
                             </div>
-                            <div class="p-1 col-2 bg-light">
-                                <div>N @Model.Product.Price.ToString("n")</div>
+                            <div class="row pl-2">
+                                <p class="text-secondary">@Html.Raw(Model.Product.Description)</p>
                             </div>
                         </div>
-                        <div class="row pl-2">
-                            <p class="text-secondary">@Html.Raw(Model.Product.Description)</p>
+                        
+                        <div>
+                        <div class="pl-2">
+                            <div class="text-primary"><h4>Quantity</h4></div>
+                            <div><input asp-for="Count" class="form-control" /></div>
                         </div>
-                        <div class="row pl-2">
-                            <div class="col-2 text-primary"><h4>Quantity</h4></div>
-                            <div class="col-10"><input asp-for="Count" class="form-control" /></div>
+                        </div>
                         </div>
                     </div>
                     <div class="col-12 col-lg-3 offset-lg-1 text-center">
@@ -58,7 +62,7 @@
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
         <div class="card-footer">
             <div class="row">
                 <div class="col-12 col-md-6 pb-1">
@@ -69,5 +73,37 @@
                 </div>
             </div>
         </div>
+        <div class="text-center p-2">
+            <h3>Recommended Products</h3>
+        </div>
+        <section class="d-flex justify-content-around">
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-lg-3 col-md-6">
+                    <div class="row p-2">
+                        <div class="col-12 p-1" style="border:1px solid #008cba; border-radius:5px;">
+                            <div class="card">
+                                <img src="@product.ImageUrl" class="card-img-top rounded" width="240" height="130" />
+
+                                <div class="card-body">
+                                    <div class="pl-1">
+                                        <p class="card-title h5 text-primary">@product.Name</p>
+                                    </div>
+                                    <div class="pl-1">
+                                        <p>Price: <b>N @product.Price.ToString("n")</b></p>
+                                    </div>
+                                    <div>
+                                        <a asp-action="Details" class="btn btn-primary form-control" asp-route-productid="@product.Id">
+                                            Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </section>
+       
     </div>
 </form>

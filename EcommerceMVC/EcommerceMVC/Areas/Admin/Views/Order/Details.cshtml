@@ -227,7 +227,7 @@
 									</div>
 								</li>
 							</ul>
-							@if (Model.OrderHeader.PaymentStatus == Constants.PaymentStatusDelayedPayment &&
+							@if (Model.OrderHeader.PaymentStatus == Constants.PaymentStatusDelayedPayment ||
 									Model.OrderHeader.OrderStatus == Constants.StatusShipped)
 							{
 								<input type="submit" class="btn btn-success form-control my-1" value="Pay Now" />

@@ -25,12 +25,36 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\3629eacb-2abb-47d7-a180-dfc8f2fc35a4.jpg",
-      "PackagePath": "staticwebassets\\images\\productImg\\3629eacb-2abb-47d7-a180-dfc8f2fc35a4.jpg"
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\0053a6eb-2d91-484d-b65d-202262c1e865.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\0053a6eb-2d91-484d-b65d-202262c1e865.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\1ad40d8d-9136-49b5-8146-234f3bee7dfa.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\1ad40d8d-9136-49b5-8146-234f3bee7dfa.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\3e069f1b-c23a-4938-bd20-b8b7de2d57e3.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\3e069f1b-c23a-4938-bd20-b8b7de2d57e3.jpg"
     },
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\3e61e690-b31b-41eb-bff3-89ac593cd673.jpg",
       "PackagePath": "staticwebassets\\images\\productImg\\3e61e690-b31b-41eb-bff3-89ac593cd673.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\45301e28-5e99-4300-b9d4-61f4b41884b0.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\45301e28-5e99-4300-b9d4-61f4b41884b0.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\6798fd16-342f-493b-b643-b712619d9eba.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\6798fd16-342f-493b-b643-b712619d9eba.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\756e7185-679c-4a79-9fbd-99682935459b.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\756e7185-679c-4a79-9fbd-99682935459b.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\images\\productImg\\deabc1d1-f532-45c3-87e2-62428d819b46.jpg",
+      "PackagePath": "staticwebassets\\images\\productImg\\deabc1d1-f532-45c3-87e2-62428d819b46.jpg"
     },
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\img\\Login-amico.svg",
@@ -39,6 +63,10 @@
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\img\\Login-rafiki.svg",
       "PackagePath": "staticwebassets\\img\\Login-rafiki.svg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\img\\flowertest.jpg",
+      "PackagePath": "staticwebassets\\img\\flowertest.jpg"
     },
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\img\\lawn_leaf.jpg",
@@ -303,6 +331,22 @@
     {
       "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\wwwroot\\images\\productImg\\077a1e79-c571-485b-a514-07304bf0433c.jpg",
+      "PackagePath": "staticwebassets\\wwwroot\\images\\productImg\\077a1e79-c571-485b-a514-07304bf0433c.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\wwwroot\\images\\productImg\\40f83862-f473-4028-a9a1-75c0c40d22e4.jpg",
+      "PackagePath": "staticwebassets\\wwwroot\\images\\productImg\\40f83862-f473-4028-a9a1-75c0c40d22e4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\wwwroot\\images\\productImg\\8c589ec3-5695-4684-9383-f9ae72d34419.jpg",
+      "PackagePath": "staticwebassets\\wwwroot\\images\\productImg\\8c589ec3-5695-4684-9383-f9ae72d34419.jpg"
+    },
+    {
+      "Id": "C:\\Users\\DELL\\Desktop\\programming\\softwareEng\\ecommerce-new\\Ecommerce-product\\EcommerceMVC\\EcommerceMVC\\wwwroot\\wwwroot\\images\\productImg\\ee6c84b2-a98e-43c4-88c3-de47103e00c1.jpg",
+      "PackagePath": "staticwebassets\\wwwroot\\images\\productImg\\ee6c84b2-a98e-43c4-88c3-de47103e00c1.jpg"
     },
     {
       "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.EcommerceMVC.Microsoft.AspNetCore.StaticWebAssets.props",
