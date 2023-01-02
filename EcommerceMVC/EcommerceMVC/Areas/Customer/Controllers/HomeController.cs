@@ -1,10 +1,12 @@
 ﻿using Ecommerce.Infrastructure.Data;
 using Ecommerce.Infrastructure.Data.DTO;
 using Ecommerce.Infrastructure.Services.Interface;
+using Ecommerce.Infrastructure.Utilities;
 using EcommerceMVC.Data;
 using EcommerceMVC.Models;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -16,11 +18,13 @@ namespace EcommerceMVC.Areas.Customer.Controllers
     public class HomeController : Controller
     {
 		private readonly EcommerceDbContext _context;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public HomeController(EcommerceDbContext context)
+		public HomeController(EcommerceDbContext context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
-		}
+            _httpContextAccessor = httpContextAccessor;
+        }
 
 		public async Task<IActionResult> Index()
         {
@@ -61,6 +65,10 @@ namespace EcommerceMVC.Areas.Customer.Controllers
                 if (cartProduct == null)
                 {
                     await _context.ShoppingCarts.AddAsync(shoppingCart, cancellationToken);
+                    await _context.SaveChangesAsync(cancellationToken);
+                    _httpContextAccessor.HttpContext.Session.SetInt32(Constants.SessionCart, _context.ShoppingCarts.Where(
+                        x => x.EcommerceUserId.Equals(Convert.ToInt64(claim.Value)))
+                        .ToList().Count);
                 }
                 if (cartProduct != null)
                 {

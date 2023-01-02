@@ -34,7 +34,7 @@ namespace Ecommerce.Infrastructure.Data.DTO
         public string? State { get; set; }
         public string? PostalCode { get; set; }
         public string? PhoneNumber { get; set; }
-        public string? ReturnUrl { get; set; }
+        //public string? ReturnUrl { get; set; }
         public string? Role { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem>? RoleList { get; set; }
