@@ -46,8 +46,9 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		{
 			orderDTO.OrderHeader = await _context.OrderHeaders.Include(u => u.EcommerceUser).FirstOrDefaultAsync(
 					x => x.Id.Equals(orderDTO.OrderHeader.Id));
-			orderDTO.OrderDetail = await _context.OrderDetails.Where(x => x.OrderId.Equals(orderDTO.OrderHeader.Id)).Include(u => u.Product)
-					.ToListAsync(cancellationToken);
+			orderDTO.OrderDetail = await _context.OrderDetails.Where(x => x.OrderId.Equals(orderDTO.OrderHeader.Id))
+				.Include(u => u.Product)
+				.ToListAsync(cancellationToken);
 
 			//stripe settings 
 			var domain = "https://localhost:44392/";
@@ -271,14 +272,10 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			}
 			else
 			{
-				var claimsIdentity = (ClaimsIdentity)User.Identity;
-				var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
 				orderHeaders = await _context.OrderHeaders.Where(x => x.EcommerceUserId.Equals(
-					Convert.ToInt64(claim.Value)))
+                    IdentityHelper.GetUserId(User.Identity)))
 					.Include(u => u.EcommerceUser)
 					.ToListAsync();
-				//if ()
 			}
 
 
