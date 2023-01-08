@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,6 @@ namespace Ecommerce.Infrastructure.Utilities
         /* For Company accounts */
         public const string PaymentStatusDelayedPayment = "ApprovedForDelayedPayment";
         public const string PaymentStatusRejected = "Rejected";
-
         public const string SessionCart = "SessionShoppingCart";
     }
 }

@@ -10,6 +10,7 @@
         "dependencies": {
           "datatables": "1.0.0",
           "Microsoft.AspNet.Mvc": "5.2.9",
+          "Microsoft.AspNet.Providers.Core": "2.0.0",
           "Microsoft.AspNetCore.Identity": "2.2.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.12",
           "Microsoft.AspNetCore.Mvc.Abstractions": "2.2.0",
@@ -27,6 +28,18 @@
         }
       },
       "datatables/1.0.0": {},
+      "EntityFramework/6.0.0": {
+        "runtime": {
+          "lib/net45/EntityFramework.SqlServer.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.20911.0"
+          },
+          "lib/net45/EntityFramework.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.20911.0"
+          }
+        }
+      },
       "Humanizer.Core/2.8.26": {
         "runtime": {
           "lib/netstandard2.0/Humanizer.dll": {
@@ -44,6 +57,17 @@
           "lib/net45/System.Web.Mvc.dll": {
             "assemblyVersion": "5.2.9.0",
             "fileVersion": "5.2.61129.10"
+          }
+        }
+      },
+      "Microsoft.AspNet.Providers.Core/2.0.0": {
+        "dependencies": {
+          "EntityFramework": "6.0.0"
+        },
+        "runtime": {
+          "lib/net40/System.Web.Providers.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.21122.0"
           }
         }
       },
@@ -1628,6 +1652,13 @@
       "path": "datatables/1.0.0",
       "hashPath": "datatables.1.0.0.nupkg.sha512"
     },
+    "EntityFramework/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-y6lX/VMghGBV6TvgQS4Q2WK6kAcOoyD+TQxObN9utd0JsMMdMxyqARxKbvgi7KEIbQ8osZ4ZvImaly7l3NDFDw==",
+      "path": "entityframework/6.0.0",
+      "hashPath": "entityframework.6.0.0.nupkg.sha512"
+    },
     "Humanizer.Core/2.8.26": {
       "type": "package",
       "serviceable": true,
@@ -1641,6 +1672,13 @@
       "sha512": "sha512-bcekKshCAh7kTWSMZPavQStSZQF/QmjEjO2gVWGITEd0/t5eRlb+ZLDE+az2qY1bZ8L6Hz0OCNeS0uzXtJcK5w==",
       "path": "microsoft.aspnet.mvc/5.2.9",
       "hashPath": "microsoft.aspnet.mvc.5.2.9.nupkg.sha512"
+    },
+    "Microsoft.AspNet.Providers.Core/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JMk31PExMANVDc04aSUyIlcL3pkFVyNg/dDn+ZZzmhZ2CBctI90BWQH1L0zXgD61ZWW5r4ybInV362sRKWIC+A==",
+      "path": "microsoft.aspnet.providers.core/2.0.0",
+      "hashPath": "microsoft.aspnet.providers.core.2.0.0.nupkg.sha512"
     },
     "Microsoft.AspNet.Razor/3.2.9": {
       "type": "package",

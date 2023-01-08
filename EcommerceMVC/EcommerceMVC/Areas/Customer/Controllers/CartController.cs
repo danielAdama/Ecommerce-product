@@ -251,9 +251,9 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			{
 				await transaction.RollbackAsync(cancellationToken);
 				TempData["errorMessage"] = ex.Message;
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction("Index");
 			}
-			return RedirectToAction(nameof(Index));
+			return RedirectToAction("Index");
 		}
 		public async Task<IActionResult> Minus(long cartId, CancellationToken cancellationToken)
 		{
@@ -276,9 +276,9 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			{
 				await transaction.RollbackAsync(cancellationToken);
 				TempData["errorMessage"] = ex.Message;
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction("Index");
 			}
-			return RedirectToAction(nameof(Index));
+			return RedirectToAction("Index");
 		}
 		public async Task<IActionResult> Remove(long cartId, CancellationToken cancellationToken)
 		{
@@ -298,9 +298,9 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			{
 				await transaction.RollbackAsync(cancellationToken);
 				TempData["errorMessage"] = ex.Message;
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction("Index");
 			}
-			return RedirectToAction(nameof(Index));
+			return RedirectToAction("Index");
 		}
 		private static ShoppingCart DecrementCount(ShoppingCart shoppingCart, int count)
 		{
