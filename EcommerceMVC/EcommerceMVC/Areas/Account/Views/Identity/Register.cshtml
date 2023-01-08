@@ -1,4 +1,5 @@
 ﻿@model Ecommerce.Infrastructure.Data.DTO.RegisterDTO;
+@using Ecommerce.Infrastructure.Utilities;
 @{
     ViewData["Title"] = "Register";
 }
@@ -14,7 +15,14 @@
     </div>
     <div class="col">
         <div class="form-wrapper">
-            <h1>@ViewData["Title"]</h1>
+            @if (User.IsInRole(Constants.RoleAdmin))
+            {
+                <h1>Register - ADMIN PORTAL</h1>
+            }
+            else
+            {
+                <h1>@ViewData["Title"]</h1>
+            }
             <p>Let's get you all set up so you can verify your personal account and begin setting up your profile</p>
             <hr />
             <form asp-area="Account" asp-controller="Identity" asp-action="Register" method="post" role="form">
@@ -52,12 +60,6 @@
                     <input asp-for="EmailAddress" class="form-control" type="email" required>
                 </div>
                 <div class="form-floating py-2 col-6">
-                    <label asp-for="Role"></label> <br>
-                    <select asp-for="Role" asp-items="@Model.RoleList" class="form-select">
-                        <option disabled selected>--Select Role--</option>
-                    </select>
-                </div>
-                <div class="form-floating py-2 col-6">
                     <label asp-for="Password" class="control-label">Password</label> <br>
                     <input type="Password" asp-for="Password" class="form-control" required>
                 </div>
@@ -66,13 +68,22 @@
                     <label asp-for="ConfirmPassword" class="control-label">ConfirmPassword</label> <br>
                     <input type="Password" asp-for="ConfirmPassword" class="form-control" required>
                 </div>
-                <div class="form-floating py-2 col-6">
-                    <select asp-for="CompanyId" style="display:none" asp-items="@Model.CompanyList" class="form-select">
-                        <option disabled selected>--Select Company--</option>
-                    </select>
-                </div>
+                @if (User.IsInRole(Constants.RoleAdmin))
+                {
+                    <div class="form-floating py-2 col-6">
+                        <label asp-for="Role"></label> <br>
+                        <select asp-for="Role" asp-items="@Model.RoleList" class="form-select">
+                            <option disabled selected>--Select Role--</option>
+                        </select>
+                    </div>
+                    <div class="form-floating py-2 col-6">
+                        <select asp-for="CompanyId" style="display:none" asp-items="@Model.CompanyList" class="form-select">
+                            <option disabled selected>--Select Company--</option>
+                        </select>
+                    </div>
+                }
                 <div class="form-group">
-                    <button type="submit" class="btn btn-success w-100 bg-dark">Create Account</button>
+                    <button type="submit" class="btn btn-success w-100 bg-dark">Sign Up</button>
                 </div>
             </form>
             <div class="reg">

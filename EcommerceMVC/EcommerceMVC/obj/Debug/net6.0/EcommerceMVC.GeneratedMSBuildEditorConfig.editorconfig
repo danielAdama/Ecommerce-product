@@ -16,6 +16,18 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/DELL/Desktop/programming/softwareEng/ecommerce-new/Ecommerce-product/EcommerceMVC/EcommerceMVC/Areas/Account/Views/Identity/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xJZGVudGl0eVxBY2Nlc3NEZW5pZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DELL/Desktop/programming/softwareEng/ecommerce-new/Ecommerce-product/EcommerceMVC/EcommerceMVC/Areas/Account/Views/Identity/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xJZGVudGl0eVxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/DELL/Desktop/programming/softwareEng/ecommerce-new/Ecommerce-product/EcommerceMVC/EcommerceMVC/Areas/Account/Views/Identity/ForgotPasswordConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xJZGVudGl0eVxGb3Jnb3RQYXNzd29yZENvbmZpcm1hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/DELL/Desktop/programming/softwareEng/ecommerce-new/Ecommerce-product/EcommerceMVC/EcommerceMVC/Areas/Account/Views/Identity/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xJZGVudGl0eVxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

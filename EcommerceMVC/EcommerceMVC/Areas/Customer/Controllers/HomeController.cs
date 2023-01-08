@@ -1,14 +1,17 @@
 ﻿using Ecommerce.Infrastructure.Data;
 using Ecommerce.Infrastructure.Data.DTO;
 using Ecommerce.Infrastructure.Services.Interface;
+using Ecommerce.Infrastructure.Utilities;
 using EcommerceMVC.Data;
 using EcommerceMVC.Models;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Claims;
+using System.Security.Principal;
 
 namespace EcommerceMVC.Areas.Customer.Controllers
 {
@@ -16,11 +19,13 @@ namespace EcommerceMVC.Areas.Customer.Controllers
     public class HomeController : Controller
     {
 		private readonly EcommerceDbContext _context;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public HomeController(EcommerceDbContext context)
+		public HomeController(EcommerceDbContext context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
-		}
+            _httpContextAccessor = httpContextAccessor;
+        }
 
 		public async Task<IActionResult> Index()
         {
@@ -50,21 +55,25 @@ namespace EcommerceMVC.Areas.Customer.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
-                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                shoppingCart.EcommerceUserId = Convert.ToInt64(claim.Value);
+                //var claimsIdentity = (ClaimsIdentity)User.Identity;
+                //var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                shoppingCart.EcommerceUserId = IdentityHelper.GetUserId(User.Identity);
 
                 var cartProduct = await _context.ShoppingCarts.FirstOrDefaultAsync(x => 
-                x.EcommerceUserId.Equals(Convert.ToInt64(claim.Value)) && 
+                x.EcommerceUserId.Equals(IdentityHelper.GetUserId(User.Identity)) && 
                 x.ProductId.Equals(shoppingCart.ProductId), cancellationToken);
 
                 if (cartProduct == null)
                 {
                     await _context.ShoppingCarts.AddAsync(shoppingCart, cancellationToken);
+                    await _context.SaveChangesAsync(cancellationToken);
+                    _httpContextAccessor.HttpContext.Session.SetInt32(Constants.SessionCart, _context.ShoppingCarts.Where(
+                        x => x.EcommerceUserId.Equals(IdentityHelper.GetUserId(User.Identity)))
+                        .ToList().Count);
                 }
                 if (cartProduct != null)
                 {
-                    if (cartProduct.EcommerceUserId.Equals(Convert.ToInt64(claim.Value)))
+                    if (cartProduct.EcommerceUserId.Equals(IdentityHelper.GetUserId(User.Identity)))
                     {
                         cartProduct.Count = IncrementCount(cartProduct, shoppingCart.Count).Count;
                     }
@@ -77,10 +86,10 @@ namespace EcommerceMVC.Areas.Customer.Controllers
             {
                 await transaction.RollbackAsync(cancellationToken);
                 TempData["errorMessage"] = ex.Message;
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             //return View(cart);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         private static ShoppingCart DecrementCount(ShoppingCart shoppingCart, int count)

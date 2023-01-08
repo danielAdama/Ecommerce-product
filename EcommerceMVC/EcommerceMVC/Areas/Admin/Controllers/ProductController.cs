@@ -113,7 +113,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				TempData["errorMessage"] = ex.Message;
 				return RedirectToAction("Index");
 			}
-			return View(obj);
+			//return View(obj);
 		}
 
 		#region API CALLS

@@ -17,14 +17,16 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 	public class CartController : Controller
     {
 		private readonly EcommerceDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 #nullable disable
-		public ShoppingCartDTO ShoppingCartDTO { get; set; }
+        public ShoppingCartDTO ShoppingCartDTO { get; set; }
 		public int OrderTotal { get; set; }
 
-		public CartController(EcommerceDbContext context)
+		public CartController(EcommerceDbContext context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
-		}
+            _httpContextAccessor = httpContextAccessor;
+        }
 
 		public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
@@ -219,6 +221,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 					.ToListAsync(cancellationToken);
 
 				/* After processing clear the shopping cart */
+				_httpContextAccessor.HttpContext.Session.Clear();
 				if (shoppingCarts.Any())
 					_context.ShoppingCarts.RemoveRange(shoppingCarts);
 				await _context.SaveChangesAsync(cancellationToken);
@@ -248,9 +251,9 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			{
 				await transaction.RollbackAsync(cancellationToken);
 				TempData["errorMessage"] = ex.Message;
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction("Index");
 			}
-			return RedirectToAction(nameof(Index));
+			return RedirectToAction("Index");
 		}
 		public async Task<IActionResult> Minus(long cartId, CancellationToken cancellationToken)
 		{
@@ -258,10 +261,13 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			try
 			{
 				var cart = await _context.ShoppingCarts.FindAsync(cartId);
-				if (cart.Count <= 0)
+				if (cart.Count <= 1)
 				{
 					_context.ShoppingCarts.Remove(cart);
-				}
+                    var count = _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(cart.EcommerceUserId))
+                    .ToList().Count - 1;
+                    _httpContextAccessor.HttpContext.Session.SetInt32(Constants.SessionCart, count);
+                }
 				cart.Count = DecrementCount(cart, 1).Count;
 				await _context.SaveChangesAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
@@ -270,9 +276,9 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			{
 				await transaction.RollbackAsync(cancellationToken);
 				TempData["errorMessage"] = ex.Message;
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction("Index");
 			}
-			return RedirectToAction(nameof(Index));
+			return RedirectToAction("Index");
 		}
 		public async Task<IActionResult> Remove(long cartId, CancellationToken cancellationToken)
 		{
@@ -282,15 +288,19 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				var cart = await _context.ShoppingCarts.FindAsync(cartId);
 				_context.ShoppingCarts.Remove(cart);
 				await _context.SaveChangesAsync(cancellationToken);
-				await transaction.CommitAsync(cancellationToken);
+                var count =  _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(cart.EcommerceUserId))
+					.ToList().Count;
+				_httpContextAccessor.HttpContext.Session.SetInt32(Constants.SessionCart, count);
+
+                await transaction.CommitAsync(cancellationToken);
 			}
 			catch (Exception ex)
 			{
 				await transaction.RollbackAsync(cancellationToken);
 				TempData["errorMessage"] = ex.Message;
-				return RedirectToAction(nameof(Index));
+				return RedirectToAction("Index");
 			}
-			return RedirectToAction(nameof(Index));
+			return RedirectToAction("Index");
 		}
 		private static ShoppingCart DecrementCount(ShoppingCart shoppingCart, int count)
 		{

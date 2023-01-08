@@ -4,6 +4,8 @@ using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Http;
 
 namespace EcommerceMVC.Services.Infrastructure.Auth
 {
@@ -41,8 +43,15 @@ namespace EcommerceMVC.Services.Infrastructure.Auth
                 options.SlidingExpiration = true;
             });
 
-            services.AddSingleton<IEmailSender, EmailSender>();
-
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddDistributedMemoryCache();
+            //services.AddSession(options =>
+            //{
+            //    options.IdleTimeout = TimeSpan.FromMinutes(100);
+            //    options.Cookie.HttpOnly = true;
+            //    options.Cookie.IsEssential = true;
+            //});
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return services;
         }
     }

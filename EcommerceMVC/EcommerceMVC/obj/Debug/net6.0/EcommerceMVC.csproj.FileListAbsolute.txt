@@ -566,3 +566,6 @@ C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\Ec
 C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\bin\Debug\net6.0\SendGrid.Extensions.DependencyInjection.dll
 C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\bin\Debug\net6.0\Stripe.net.dll
 C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\bin\Debug\net6.0\Microsoft.Extensions.Configuration.dll
+C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\bin\Debug\net6.0\EntityFramework.SqlServer.dll
+C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\bin\Debug\net6.0\EntityFramework.dll
+C:\Users\DELL\Desktop\programming\softwareEng\ecommerce-new\Ecommerce-product\EcommerceMVC\EcommerceMVC\bin\Debug\net6.0\System.Web.Providers.dll

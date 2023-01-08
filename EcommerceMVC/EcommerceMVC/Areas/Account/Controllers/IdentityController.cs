@@ -35,7 +35,7 @@ namespace EcommerceMVC.Areas.Account.Controllers
             _roleManager = roleManager;
             _emailSender = emailSender;
         }
-        public IActionResult Index()
+        public ViewResult Index()
         {
             return View();
         }
@@ -46,6 +46,40 @@ namespace EcommerceMVC.Areas.Account.Controllers
             //loginDTO.ReturnUrl = returnUrl ?? Url.Content("~/");
             return View(loginDTO);
         }
+
+        //public IActionResult ForgotPassword()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        string email = model.EmailAddress.Trim().ToLower();
+        //        var user = await _userManager.FindByEmailAsync(email);
+        //        if (user == null)
+        //        {
+        //            return RedirectToAction("ForgotPasswordConfirmation");
+        //        }
+        //        var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+        //        var callbackurl = Url.Action("ResetPassword", "Identity", new
+        //        {
+        //            area = "Account",
+        //            userId = user.Id,
+        //            code = code
+        //        },
+        //            protocol: HttpContext.Request.Scheme);
+
+        //        await _emailSender.SendEmailAsync(
+        //            model.EmailAddress,
+        //            "Reset Email Confirmation",
+        //            "Please reset email by going to this link" + "<a href=\"" + callbackurl + "\">link</a>");
+        //        return RedirectToAction("ForgotPasswordConfirmation");
+        //    }
+        //    return View(model);
+            
+        //}
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
@@ -77,7 +111,7 @@ namespace EcommerceMVC.Areas.Account.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Register(string? returnUrl = null)
+        public async Task<IActionResult> Register()
         {
             if (!await _roleManager.RoleExistsAsync(Constants.RoleAdmin))
             {
@@ -111,14 +145,12 @@ namespace EcommerceMVC.Areas.Account.Controllers
                     Value = x.Id.ToString()
                 })
             };
-            registerDTO.ReturnUrl = returnUrl;
             return View(registerDTO);
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDTO registerDTO, string? returnUrl = null, CancellationToken cancellationToken = default)
         {
-            registerDTO.ReturnUrl = returnUrl;
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
@@ -163,11 +195,22 @@ namespace EcommerceMVC.Areas.Account.Controllers
                 {
 					await _userManager.AddToRoleAsync(newUser, registerDTO.Role);
                 }
-				await _signInManager.SignInAsync(newUser, isPersistent: false);
+                if (User.IsInRole(Constants.RoleAdmin))
+                {
+                    TempData["success"] = "New User Created successfully";
+                }
+                else
+                {
+                    await _signInManager.SignInAsync(newUser, isPersistent: false);
+                }
                 return LocalRedirect(returnUrl);
             }
             return View(registerDTO);
 
+        }
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
         }
 
         [HttpPost]
@@ -175,6 +218,11 @@ namespace EcommerceMVC.Areas.Account.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(Index),"Home", new { area = "Customer" });
+        }
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
