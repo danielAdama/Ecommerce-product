@@ -10,6 +10,7 @@ namespace Ecommerce.Infrastructure.Services.Interface
     public interface IUnitOfWork
     {
         ICategoryRepository Category { get; }
+        ICompanyRepository Company { get; }
         Task<int> SaveAsync(CancellationToken cancellationToken = default);
         Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default);
     }

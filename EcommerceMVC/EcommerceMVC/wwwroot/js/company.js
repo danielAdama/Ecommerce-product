@@ -8,7 +8,6 @@ function loadDataTable() {
     fetch("https://localhost:44392/Admin/Company/GetAll")
         .then(resp => resp.json())
         .then(data => {
-            console.log(data.data)
             $('#tblData').DataTable({
                 data: data.data,
                 columns: [

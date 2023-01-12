@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SendGrid.Helpers.Mail;
+using System.Data.Entity;
 
 namespace EcommerceMVC.Areas.Admin.Controllers
 {
@@ -15,11 +16,11 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 	[Authorize(Roles = Constants.RoleAdmin)]
 	public class CompanyController : Controller
     {
-        private readonly EcommerceDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CompanyController(EcommerceDbContext context)
+        public CompanyController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public ViewResult Index()
@@ -27,14 +28,14 @@ namespace EcommerceMVC.Areas.Admin.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Upsert(long id)
+        public async Task<IActionResult> Upsert(long id, CancellationToken cancellationToken)
         {
             Company company = new();
 
 
 			if (id != 0)
 			{
-				var getCompany = await _context.Companies.FirstOrDefaultAsync(x => x.Id == id);
+                var getCompany = await _unitOfWork.Company.GetIdAsync(id, cancellationToken);
 				return View(getCompany);
             }
 			return View(company);
@@ -46,19 +47,19 @@ namespace EcommerceMVC.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+                using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
                 try
                 {
                     if (company.Id == 0)
                     {
-                        await _context.Companies.AddAsync(company, cancellationToken);
+                        await _unitOfWork.Company.AddAsync(company, cancellationToken);
                     }
                     if (company.Id != 0)
                     {
-                        _context.Companies.Update(company);
+                        _unitOfWork.Company.Update(company);
                         TempData["success"] = "Company updated successfully";
                     }
-                    await _context.SaveChangesAsync(cancellationToken);
+                    await _unitOfWork.SaveAsync(cancellationToken);
                     await transaction.CommitAsync(cancellationToken);
                     TempData["success"] = "Company created successfully";
 					return RedirectToAction("Index");
@@ -76,28 +77,28 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 
         #region API CALLS
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var companyList = await _context.Companies.AsNoTracking().ToListAsync();
+            var companyList = await _unitOfWork.Company.GetAllCompaniesAsync(cancellationToken);
             return Json(new { data = companyList });
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(long id)
+        public async Task<IActionResult> Delete(long id, CancellationToken cancellationToken)
         {
-            var company = await _context.Companies.FindAsync(id);
+            var company = await _unitOfWork.Company.GetIdAsync(id, cancellationToken);
 
             if (company == null)
             {
                 return Json(new { success = false, message = "Error while deleting" });
             }
-            if (await _context.EcommerceUsers.AnyAsync(x => x.CompanyId.Equals(company.Id)))
+            if (await _unitOfWork.Company.GetCompanyUserAsync(company))
             {
-                return Json(new { success = false, message = "Cannot delete this company because it has active user" });
+                return Json(new { success = false, message = "Cannot delete this company because it has an active user" });
             }
 
-            _context.Companies.Remove(company);
-            await _context.SaveChangesAsync();
+            _unitOfWork.Company.Delete(company);
+            await _unitOfWork.SaveAsync(cancellationToken);
             return Json(new { success = true, message = "Delete Successful" });
         }
         #endregion
