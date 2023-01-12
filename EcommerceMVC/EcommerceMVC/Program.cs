@@ -19,7 +19,8 @@ builder.Services.AddSession(options =>
 });
 builder.Services.RegisterPersistence(builder.Configuration);
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 var app = builder.Build();
 

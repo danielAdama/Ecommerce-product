@@ -43,7 +43,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
                 Product = product,
                 Products = await _context.Products.Where(x => x.Category.Id.Equals(product.CategoryId) && x.Id!=productid).AsNoTracking()
                 .ToListAsync(cancellationToken)
-        };
+            };
             return View(cart);
         }
 

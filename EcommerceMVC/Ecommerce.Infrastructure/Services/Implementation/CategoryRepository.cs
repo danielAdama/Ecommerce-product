@@ -18,43 +18,40 @@ namespace Ecommerce.Infrastructure.Services.Implementation
 		{
 			_context = context;
 		}
-		public bool Add(Category category)
+		public async Task AddAsync(Category category, CancellationToken cancellationToken = default)
 		{
-			_context.Add(category);
-			return Save();
+			await _context.AddAsync(category);
 		}
 
-		public bool Delete(Category category)
+		public void Delete(Category category)
 		{
 			_context.Remove(category);
-			return Save();
 		}
 
-		public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+		public async Task<IEnumerable<Category>> GetAllCategoriesAsync(CancellationToken cancellationToken = default)
 		{
-			return await _context.Categories.AsNoTracking().ToListAsync();
+			return await _context.Categories.AsNoTracking().ToListAsync(cancellationToken);
 		}
 
-		public async Task<Category> GetIdAsync(long id)
+		public async Task<Category> GetIdAsync(long id, CancellationToken cancellationToken = default)
 		{
-			return await _context.Categories.FindAsync(id);
+			return await _context.Categories.FirstOrDefaultAsync(x=> x.Id.Equals(id), cancellationToken);
 		}
 
-		public async Task<int> GetCountAsync()
+		public async Task<int> GetCountAsync(CancellationToken cancellationToken = default)
 		{
-			return await _context.Categories.CountAsync();
+			return await _context.Categories.CountAsync(cancellationToken);
 		}
 
-		public bool Save()
-		{
-			var saved = _context.SaveChanges();
-			return saved > 0;
-		}
+		//public bool Save()
+		//{
+		//	var saved = _context.SaveChanges();
+		//	return saved > 0;
+		//}
 
-		public bool Update(Category category)
+		public void Update(Category category)
 		{
 			_context.Update(category);
-			return Save();
 		}
 	}
 }

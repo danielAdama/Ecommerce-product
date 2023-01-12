@@ -29,7 +29,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		}
 		public async Task<IActionResult> Details(long orderid, OrderDTO orderDTO)
 		{
-			orderDTO = new OrderDTO()
+			orderDTO = new OrderDTO
 			{
 				OrderHeader = await _context.OrderHeaders.Include(u => u.EcommerceUser).FirstOrDefaultAsync(
 					x => x.Id.Equals(orderid)),
