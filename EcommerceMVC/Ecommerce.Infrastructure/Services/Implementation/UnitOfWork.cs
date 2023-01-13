@@ -1,4 +1,5 @@
-﻿using Ecommerce.Infrastructure.Services.Interface;
+﻿using Ecommerce.Infrastructure.Data;
+using Ecommerce.Infrastructure.Services.Interface;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
@@ -18,9 +19,11 @@ namespace Ecommerce.Infrastructure.Services.Implementation
             _context = context;
             Category = new CategoryRepository(_context);
             Company = new CompanyRepository(_context);
+            Order = new OrderRepository(_context);
         }
         public ICategoryRepository Category { get; private set; }
         public ICompanyRepository Company { get; private set; }
+        public IOrderRepository Order { get; private set; }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
