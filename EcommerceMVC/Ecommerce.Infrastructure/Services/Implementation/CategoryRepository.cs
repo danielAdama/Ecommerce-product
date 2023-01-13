@@ -20,7 +20,7 @@ namespace Ecommerce.Infrastructure.Services.Implementation
 		}
 		public async Task AddAsync(Category category, CancellationToken cancellationToken = default)
 		{
-			await _context.AddAsync(category);
+			await _context.AddAsync(category, cancellationToken);
 		}
 
 		public void Delete(Category category)
@@ -42,12 +42,6 @@ namespace Ecommerce.Infrastructure.Services.Implementation
 		{
 			return await _context.Categories.CountAsync(cancellationToken);
 		}
-
-		//public bool Save()
-		//{
-		//	var saved = _context.SaveChanges();
-		//	return saved > 0;
-		//}
 
 		public void Update(Category category)
 		{

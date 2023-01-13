@@ -8,9 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using Stripe.Checkout;
-using System.Diagnostics;
-using System.Security.Claims;
-using System.Threading;
 
 namespace EcommerceMVC.Areas.Admin.Controllers
 {
@@ -18,23 +15,23 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 	[Authorize]
 	public class OrderController : Controller
 	{
-		private readonly EcommerceDbContext _context;
-		public OrderController(EcommerceDbContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        public OrderController(
+            IUnitOfWork unitOfWork
+            )
 		{
-			_context = context;
-		}
+            _unitOfWork = unitOfWork;
+        }
 		public IActionResult Index()
 		{
 			return View();
 		}
-		public async Task<IActionResult> Details(long orderid, OrderDTO orderDTO)
+		public async Task<IActionResult> Details(long orderid, OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
 			orderDTO = new OrderDTO
 			{
-				OrderHeader = await _context.OrderHeaders.Include(u => u.EcommerceUser).FirstOrDefaultAsync(
-					x => x.Id.Equals(orderid)),
-				OrderDetail = await _context.OrderDetails.Where(x => x.OrderId.Equals(orderid)).Include(u => u.Product)
-					.ToListAsync(),
+				OrderHeader = await _unitOfWork.Order.GetUserOrdersAsync(orderid, cancellationToken),
+				OrderDetail = await _unitOfWork.Order.GetAllOrderDetailsAsync(orderid, cancellationToken),
 
 			};
 			return View(orderDTO);
@@ -44,11 +41,8 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		[ActionName("Details")]
 		public async Task<IActionResult> DetailsPayNow(OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
-			orderDTO.OrderHeader = await _context.OrderHeaders.Include(u => u.EcommerceUser).FirstOrDefaultAsync(
-					x => x.Id.Equals(orderDTO.OrderHeader.Id));
-			orderDTO.OrderDetail = await _context.OrderDetails.Where(x => x.OrderId.Equals(orderDTO.OrderHeader.Id))
-				.Include(u => u.Product)
-				.ToListAsync(cancellationToken);
+			orderDTO.OrderHeader = await _unitOfWork.Order.GetUserOrdersAsync(orderDTO.OrderHeader.Id, cancellationToken);
+			orderDTO.OrderDetail = await _unitOfWork.Order.GetAllOrderDetailsAsync(orderDTO.OrderHeader.Id, cancellationToken);
 
 			//stripe settings 
 			var domain = "https://localhost:44392/";
@@ -87,8 +81,10 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 
 			var service = new SessionService();
 			Session session = await service.CreateAsync(options);
-			UpdateStripePaymentId(orderDTO.OrderHeader.Id, session.Id, session.PaymentIntentId);
-			await _context.SaveChangesAsync(cancellationToken);
+            orderDTO.OrderHeader.TrackingNumber = Guid.NewGuid().ToString();
+            orderDTO.OrderHeader.Carrier = "GIG";
+            _unitOfWork.Order.UpdateStripePaymentId(orderDTO.OrderHeader.Id, session.Id, session.PaymentIntentId);
+			await _unitOfWork.SaveAsync(cancellationToken);
 			Response.Headers.Add("Location", session.Url);
 			return new StatusCodeResult(303);
 		}
@@ -96,7 +92,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		public async Task<IActionResult> PaymentConfirmation(long orderHeaderid, CancellationToken cancellationToken)
 		{
 			int idint = Convert.ToUInt16(orderHeaderid);
-			OrderHeader orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(x => x.Id.Equals(orderHeaderid));
+			OrderHeader orderHeader = await _unitOfWork.Order.GetIdAsync(orderHeaderid);
 			if (orderHeader.PaymentStatus == Constants.PaymentStatusDelayedPayment)
 			{
 				var service = new SessionService();
@@ -104,9 +100,9 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				/* Check the Stripe status */
 				if (session.PaymentStatus.ToLower().Equals("paid"))
 				{
-					UpdateStripePaymentId(orderHeaderid, orderHeader.SessionId, session.PaymentIntentId);
-					UpdateStatus(orderHeaderid, orderHeader.OrderStatus, Constants.PaymentStatusApproved);
-					await _context.SaveChangesAsync(cancellationToken);
+                    _unitOfWork.Order.UpdateStripePaymentId(orderHeaderid, orderHeader.SessionId, session.PaymentIntentId);
+                    _unitOfWork.Order.UpdateStatus(orderHeaderid, orderHeader.OrderStatus, Constants.PaymentStatusApproved);
+					await _unitOfWork.SaveAsync(cancellationToken);
 				}
 			}
 			return View(idint);
@@ -116,8 +112,8 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		[Authorize(Roles =Constants.RoleAdmin+","+Constants.RoleEmployee)]
 		public async Task<IActionResult> UpdateOrderDetail(OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
-			var order = await _context.OrderHeaders.FirstOrDefaultAsync(x => x.Id.Equals(orderDTO.OrderHeader.Id), cancellationToken);
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			var order = await _unitOfWork.Order.GetIdAsync(orderDTO.OrderHeader.Id, cancellationToken);
+			using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
 			{
 				order.Name = orderDTO.OrderHeader.Name;
@@ -135,10 +131,10 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 				{
 					order.TrackingNumber = orderDTO.OrderHeader.TrackingNumber;
 				}
-				await _context.SaveChangesAsync(cancellationToken);
+				await _unitOfWork.SaveAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 				TempData["success"] = "Order Details updated successfully";
-				return RedirectToAction(nameof(Details), "Order", new { orderid = order.Id });
+				return RedirectToAction("Details", "Order", new { orderid = order.Id });
 			}
 			catch (Exception ex)
 			{
@@ -152,11 +148,11 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 		public async Task<IActionResult> StartProcessing(OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				UpdateStatus(orderDTO.OrderHeader.Id, Constants.StatusInProcess);
-				await _context.SaveChangesAsync(cancellationToken);
+				_unitOfWork.Order.UpdateStatus(orderDTO.OrderHeader.Id, Constants.StatusInProcess);
+				await _unitOfWork.SaveAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 				TempData["success"] = "Order Status updated successfully";
 				return RedirectToAction(nameof(Details), "Order", new { orderid = orderDTO.OrderHeader.Id });
@@ -173,9 +169,8 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 		public async Task<IActionResult> ShipOrder(OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
-			var orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(
-				x => x.Id.Equals(orderDTO.OrderHeader.Id), cancellationToken);
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			var orderHeader = await _unitOfWork.Order.GetIdAsync(orderDTO.OrderHeader.Id, cancellationToken);
+			using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
 			{
 				orderHeader.TrackingNumber = orderDTO.OrderHeader.TrackingNumber;
@@ -187,7 +182,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 					orderHeader.PaymentDueDate = DateTimeOffset.UtcNow.AddDays(30);
 				}
 				//_context.OrderHeaders.Update(orderHeader);
-				await _context.SaveChangesAsync(cancellationToken);
+				await _unitOfWork.SaveAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 				TempData["success"] = "Order Shipped successfully";
 				return RedirectToAction(nameof(Details), "Order", new { orderid = orderDTO.OrderHeader.Id });
@@ -203,9 +198,8 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		[Authorize(Roles = Constants.RoleAdmin + "," + Constants.RoleEmployee)]
 		public async Task<IActionResult> CancelOrder(OrderDTO orderDTO, CancellationToken cancellationToken)
 		{
-			var orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(
-				x => x.Id.Equals(orderDTO.OrderHeader.Id), cancellationToken);
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			var orderHeader = await _unitOfWork.Order.GetIdAsync(orderDTO.OrderHeader.Id, cancellationToken);
+			using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
 			{
 				/* When order is cancelled refund the customer, if payed */
@@ -218,13 +212,13 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 					};
 					var service = new RefundService();
 					Refund refund = await service.CreateAsync(options);
-					UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusRefunded);
+                    _unitOfWork.Order.UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusRefunded);
 				}
 				if (orderHeader.PaymentStatus != Constants.PaymentStatusApproved)
 				{
-					UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusCancelled);
+					_unitOfWork.Order.UpdateStatus(orderHeader.Id, Constants.StatusCancelled, Constants.StatusCancelled);
 				}
-				await _context.SaveChangesAsync(cancellationToken);
+				await _unitOfWork.SaveAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 				TempData["success"] = "Order Cancelled successfully";
 				return RedirectToAction(nameof(Details), "Order", new { orderid = orderDTO.OrderHeader.Id });
@@ -237,30 +231,9 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			return View(orderDTO);
 		}
 
-		private void UpdateStripePaymentId(long id, string sessionId, string paymentIntentId)
-		{
-			var orders = _context.OrderHeaders.Find(id);
-
-			orders.PaymentDate = DateTimeOffset.UtcNow;
-			orders.SessionId = sessionId;
-			orders.PaymentIntentId = paymentIntentId;
-		}
-		private void UpdateStatus(long id, string orderStatus, string? paymentStatus = null)
-		{
-			var orders = _context.OrderHeaders.Find(id);
-			if (orders != null)
-			{
-				orders.OrderStatus = orderStatus;
-				if (paymentStatus != null)
-				{
-					orders.PaymentStatus = paymentStatus;
-				}
-			}
-		}
-
 		#region API CALLS
 		[HttpGet]
-		public async Task<IActionResult> GetAll(string status)
+		public async Task<IActionResult> GetAll(string status, CancellationToken cancellationToken)
 		{
 
 			IEnumerable<OrderHeader> orderHeaders;
@@ -268,14 +241,12 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 			if (User.IsInRole(Constants.RoleAdmin) || User.IsInRole(Constants.RoleEmployee))
 			{
 				/* We need to load all the orders based on the user(email) */
-				orderHeaders = await _context.OrderHeaders.Include(u => u.EcommerceUser).ToListAsync();
+				orderHeaders = await _unitOfWork.Order.GetAllUserOrdersAsync(cancellationToken);
 			}
 			else
 			{
-				orderHeaders = await _context.OrderHeaders.Where(x => x.EcommerceUserId.Equals(
-                    IdentityHelper.GetUserId(User.Identity)))
-					.Include(u => u.EcommerceUser)
-					.ToListAsync();
+				orderHeaders = await _unitOfWork.Order.GetLoggedInUserOrdersAsync(
+					IdentityHelper.GetUserId(User.Identity), cancellationToken);
 			}
 
 

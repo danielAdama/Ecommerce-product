@@ -8,7 +8,6 @@ function loadDataTable() {
     fetch("https://localhost:44392/Admin/Company/GetAll")
         .then(resp => resp.json())
         .then(data => {
-            console.log(data.data)
             $('#tblData').DataTable({
                 data: data.data,
                 columns: [
@@ -47,11 +46,8 @@ function Delete(url) {
         confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
         if (result.isConfirmed) {
-            console.log(result);
             const response = await fetch(url, { method: 'DELETE' });
-            console.log(response)
             if (response.ok) {
-                dataTable.ajax.reload();
                 toastr.success("successful");
             } else {
                 toastr.error("something went wrong");

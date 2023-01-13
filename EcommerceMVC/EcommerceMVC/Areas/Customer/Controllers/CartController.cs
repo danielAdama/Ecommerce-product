@@ -30,12 +30,10 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
 		public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 			/* Get all the products in a cart for a particular user */
 			ShoppingCartDTO = new ShoppingCartDTO
 			{
-				ListCart = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(Convert.ToInt64(claim.Value)))
+				ListCart = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(IdentityHelper.GetUserId(User.Identity)))
 				.Include(u => u.Product)
 				.ToListAsync(cancellationToken),
 				OrderHeader = new()
@@ -51,12 +49,10 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
         public async Task<IActionResult> Summary(CancellationToken cancellationToken)
         {
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 			/* Get all the products in a cart for a particular user */
 			ShoppingCartDTO = new ShoppingCartDTO
 			{
-				ListCart = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(Convert.ToInt64(claim.Value)))
+				ListCart = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(IdentityHelper.GetUserId(User.Identity)))
 				.Include(u => u.Product)
 				.ToListAsync(cancellationToken),
 				OrderHeader = new()
@@ -64,7 +60,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
 			/* Retrieve all the application order details for a logged in user */
 			ShoppingCartDTO.OrderHeader.EcommerceUser = await _context.EcommerceUsers.FirstOrDefaultAsync(
-				x => x.Id.Equals(Convert.ToInt64(claim.Value)), cancellationToken);
+				x => x.Id.Equals(IdentityHelper.GetUserId(User.Identity)), cancellationToken);
 
 			ShoppingCartDTO.OrderHeader.Name = ShoppingCartDTO.OrderHeader.EcommerceUser.UserName;
 			ShoppingCartDTO.OrderHeader.PhoneNumber = ShoppingCartDTO.OrderHeader.EcommerceUser.PhoneNumber;
@@ -72,6 +68,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			ShoppingCartDTO.OrderHeader.City = ShoppingCartDTO.OrderHeader.EcommerceUser.City;
 			ShoppingCartDTO.OrderHeader.State = ShoppingCartDTO.OrderHeader.EcommerceUser.State;
 			ShoppingCartDTO.OrderHeader.PostalCode = ShoppingCartDTO.OrderHeader.EcommerceUser.PostalCode;
+			ShoppingCartDTO.OrderHeader.OrderDate = DateTimeOffset.UtcNow;
             
 			foreach (var cart in ShoppingCartDTO.ListCart)
 			{
@@ -87,16 +84,13 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<IActionResult> SummaryPOST(ShoppingCartDTO ShoppingCartDTO, CancellationToken cancellationToken)
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
 			ShoppingCartDTO.ListCart = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(
-				Convert.ToInt64(claim.Value)))
+				IdentityHelper.GetUserId(User.Identity)))
 				.Include(u => u.Product)
 				.ToListAsync(cancellationToken);
 
 			ShoppingCartDTO.OrderHeader.OrderDate = DateTimeOffset.UtcNow;
-			ShoppingCartDTO.OrderHeader.EcommerceUserId = Convert.ToInt64(claim.Value);
+			ShoppingCartDTO.OrderHeader.EcommerceUserId = IdentityHelper.GetUserId(User.Identity);
 
 			foreach (var cart in ShoppingCartDTO.ListCart)
 			{
@@ -107,7 +101,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
 			/* If it's a company user allow them to make order without redirecting them to the 
 			 * stripe, but company users are meant to pay between 30 days. */
-			EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(Convert.ToInt64(claim.Value));
+			EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(IdentityHelper.GetUserId(User.Identity));
 			/* Flag as Delayed Payment and Approved order if it is a company user, otherwise flag as pending */
 			if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
 			{
@@ -180,8 +174,8 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				
 				var service = new SessionService();
 				Session session = await service.CreateAsync(options);
-				//ShoppingCartDTO.OrderHeader.SessionId = session.Id;
-				//ShoppingCartDTO.OrderHeader.PaymentIntentId = session.PaymentIntentId;
+				ShoppingCartDTO.OrderHeader.TrackingNumber = Guid.NewGuid().ToString();
+				ShoppingCartDTO.OrderHeader.Carrier = "GIG";
 				UpdateStripePaymentId(ShoppingCartDTO.OrderHeader.Id, session.Id, session.PaymentIntentId);
 				await _context.SaveChangesAsync(cancellationToken);
 				Response.Headers.Add("Location", session.Url);
@@ -199,7 +193,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		public async Task<IActionResult> OrderConfirmation(long id, CancellationToken cancellationToken)
 		{
 			int idint = Convert.ToUInt16(id);
-			OrderHeader orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(x=> x.Id.Equals(id));
+			OrderHeader orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(x=> x.Id.Equals(id), cancellationToken);
 			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 			try
 			{
@@ -315,7 +309,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
 		private void UpdateStripePaymentId(long id, string sessionId, string paymentIntentId)
 		{
-			var orders = _context.OrderHeaders.Find(id);
+			var orders = _context.OrderHeaders.FirstOrDefault(x=>x.Id.Equals(id));
 
 			orders.PaymentDate = DateTimeOffset.UtcNow;
 			orders.SessionId = sessionId;
@@ -324,8 +318,8 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
 		private void UpdateStatus(long id, string orderStatus, string? paymentStatus = null)
 		{
-			var orders = _context.OrderHeaders.Find(id);
-			if (orders != null)
+            var orders = _context.OrderHeaders.FirstOrDefault(x => x.Id.Equals(id));
+            if (orders != null)
 			{
 				orders.OrderStatus = orderStatus;
 				if (paymentStatus != null)

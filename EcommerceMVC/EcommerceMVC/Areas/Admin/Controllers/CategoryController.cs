@@ -38,11 +38,22 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 
 			if (ModelState.IsValid)
 			{
-				await _unitOfWork.Category.AddAsync(productProperty);
-				await _unitOfWork.SaveAsync(cancellationToken);
-				TempData["Success"] = "Category created successfully";
-				return RedirectToAction("Index");
-			}
+				using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+				try
+				{
+                    await _unitOfWork.Category.AddAsync(productProperty, cancellationToken);
+                    await _unitOfWork.SaveAsync(cancellationToken);
+                    await transaction.CommitAsync(cancellationToken);
+                    TempData["Success"] = "Category created successfully";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                    TempData["errorMessage"] = ex.Message;
+                    return RedirectToAction("Index");
+                }
+            }
 			return View(productProperty);
 		}
 
