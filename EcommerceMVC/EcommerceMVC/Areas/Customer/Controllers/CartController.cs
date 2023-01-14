@@ -1,14 +1,14 @@
 ﻿using Ecommerce.Infrastructure.Data;
 using Ecommerce.Infrastructure.Data.DTO;
+using Ecommerce.Infrastructure.Services.Interface;
 using Ecommerce.Infrastructure.Utilities;
 using EcommerceMVC.Data;
 using EcommerceMVC.Services.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Stripe;
 using Stripe.Checkout;
-using System.Security.Claims;
 
 namespace EcommerceMVC.Areas.Customer.Controllers
 {
@@ -16,16 +16,18 @@ namespace EcommerceMVC.Areas.Customer.Controllers
     [Authorize]
 	public class CartController : Controller
     {
-		private readonly EcommerceDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
 #nullable disable
         public ShoppingCartDTO ShoppingCartDTO { get; set; }
 		public int OrderTotal { get; set; }
 
-		public CartController(EcommerceDbContext context, IHttpContextAccessor httpContextAccessor)
+		public CartController( 
+			IHttpContextAccessor httpContextAccessor, 
+			IUnitOfWork unitOfWork)
 		{
-			_context = context;
             _httpContextAccessor = httpContextAccessor;
+			_unitOfWork = unitOfWork;
         }
 
 		public async Task<IActionResult> Index(CancellationToken cancellationToken)
@@ -33,9 +35,8 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			/* Get all the products in a cart for a particular user */
 			ShoppingCartDTO = new ShoppingCartDTO
 			{
-				ListCart = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(IdentityHelper.GetUserId(User.Identity)))
-				.Include(u => u.Product)
-				.ToListAsync(cancellationToken),
+				ListCart = await _unitOfWork.Cart.GetAllUserProductsAsync(
+					IdentityHelper.GetUserId(User.Identity), cancellationToken),
 				OrderHeader = new()
 			};
 			foreach(var cart in ShoppingCartDTO.ListCart)
@@ -52,15 +53,14 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			/* Get all the products in a cart for a particular user */
 			ShoppingCartDTO = new ShoppingCartDTO
 			{
-				ListCart = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(IdentityHelper.GetUserId(User.Identity)))
-				.Include(u => u.Product)
-				.ToListAsync(cancellationToken),
+				ListCart = await _unitOfWork.Cart.GetAllUserProductsAsync(
+                    IdentityHelper.GetUserId(User.Identity), cancellationToken),
 				OrderHeader = new()
 			};
 
 			/* Retrieve all the application order details for a logged in user */
-			ShoppingCartDTO.OrderHeader.EcommerceUser = await _context.EcommerceUsers.FirstOrDefaultAsync(
-				x => x.Id.Equals(IdentityHelper.GetUserId(User.Identity)), cancellationToken);
+			ShoppingCartDTO.OrderHeader.EcommerceUser = await _unitOfWork.Cart.GetLoggedInUserCartAsync(
+				IdentityHelper.GetUserId(User.Identity), cancellationToken);
 
 			ShoppingCartDTO.OrderHeader.Name = ShoppingCartDTO.OrderHeader.EcommerceUser.UserName;
 			ShoppingCartDTO.OrderHeader.PhoneNumber = ShoppingCartDTO.OrderHeader.EcommerceUser.PhoneNumber;
@@ -84,10 +84,8 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		[ValidateAntiForgeryToken]
         public async Task<IActionResult> SummaryPOST(ShoppingCartDTO ShoppingCartDTO, CancellationToken cancellationToken)
         {
-			ShoppingCartDTO.ListCart = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(
-				IdentityHelper.GetUserId(User.Identity)))
-				.Include(u => u.Product)
-				.ToListAsync(cancellationToken);
+			ShoppingCartDTO.ListCart = await _unitOfWork.Cart.GetAllUserProductsAsync(
+				IdentityHelper.GetUserId(User.Identity), cancellationToken);
 
 			ShoppingCartDTO.OrderHeader.OrderDate = DateTimeOffset.UtcNow;
 			ShoppingCartDTO.OrderHeader.EcommerceUserId = IdentityHelper.GetUserId(User.Identity);
@@ -101,7 +99,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
 			/* If it's a company user allow them to make order without redirecting them to the 
 			 * stripe, but company users are meant to pay between 30 days. */
-			EcommerceUser ecommerceUser = await _context.EcommerceUsers.FindAsync(IdentityHelper.GetUserId(User.Identity));
+			EcommerceUser ecommerceUser = await _unitOfWork.Cart.GetUserIdAsync(IdentityHelper.GetUserId(User.Identity));
 			/* Flag as Delayed Payment and Approved order if it is a company user, otherwise flag as pending */
 			if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
 			{
@@ -114,8 +112,8 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				ShoppingCartDTO.OrderHeader.OrderStatus = Constants.StatusPending;
 			}
 
-			await _context.OrderHeaders.AddAsync(ShoppingCartDTO.OrderHeader, cancellationToken);
-			await _context.SaveChangesAsync(cancellationToken);
+			await _unitOfWork.Order.AddAsync(ShoppingCartDTO.OrderHeader, cancellationToken);
+			await _unitOfWork.SaveAsync(cancellationToken);
 
 			foreach (var cart in ShoppingCartDTO.ListCart)
 			{
@@ -126,11 +124,11 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 					Price = cart.Price,
 					Count = cart.Count
 				};
-				await _context.OrderDetails.AddAsync(orderDetail, cancellationToken);
-				await _context.SaveChangesAsync(cancellationToken);
-			}
+                await _unitOfWork.Order.AddOrderDetailAsync(orderDetail, cancellationToken);
+                await _unitOfWork.SaveAsync(cancellationToken);
+            }
 
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
 			{
                 if (ecommerceUser.CompanyId.GetValueOrDefault() != 0)
@@ -173,11 +171,11 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 				}
 				
 				var service = new SessionService();
-				Session session = await service.CreateAsync(options);
-				ShoppingCartDTO.OrderHeader.TrackingNumber = Guid.NewGuid().ToString();
+                Session session = await service.CreateAsync(options);
+                ShoppingCartDTO.OrderHeader.TrackingNumber = Guid.NewGuid().ToString();
 				ShoppingCartDTO.OrderHeader.Carrier = "GIG";
-				UpdateStripePaymentId(ShoppingCartDTO.OrderHeader.Id, session.Id, session.PaymentIntentId);
-				await _context.SaveChangesAsync(cancellationToken);
+				_unitOfWork.Order.UpdateStripePaymentId(ShoppingCartDTO.OrderHeader.Id, session.Id, session.PaymentIntentId);
+				await _unitOfWork.SaveAsync(cancellationToken);
 				Response.Headers.Add("Location", session.Url);
 				await transaction.CommitAsync(cancellationToken);
 			}
@@ -193,8 +191,8 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		public async Task<IActionResult> OrderConfirmation(long id, CancellationToken cancellationToken)
 		{
 			int idint = Convert.ToUInt16(id);
-			OrderHeader orderHeader = await _context.OrderHeaders.FirstOrDefaultAsync(x=> x.Id.Equals(id), cancellationToken);
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			OrderHeader orderHeader = await _unitOfWork.Order.GetIdAsync(id, cancellationToken);
+			using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
 			{
 				if (orderHeader.PaymentStatus != Constants.PaymentStatusDelayedPayment)
@@ -204,21 +202,20 @@ namespace EcommerceMVC.Areas.Customer.Controllers
                     /* Check the Stripe status */
                     if (session.PaymentStatus.ToLower().Equals("paid"))
                     {
-						UpdateStripePaymentId(id, orderHeader.SessionId, session.PaymentIntentId);
-						UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
-                        await _context.SaveChangesAsync(cancellationToken);
-                    }
-                }
+                        _unitOfWork.Order.UpdateStripePaymentId(id, orderHeader.SessionId, session.PaymentIntentId);
+                        _unitOfWork.Order.UpdateStatus(id, Constants.StatusApproved, Constants.PaymentStatusApproved);
+                        await _unitOfWork.SaveAsync(cancellationToken);
+					}
+				}
 
-				IEnumerable<ShoppingCart> shoppingCarts = await _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(
-					orderHeader.EcommerceUserId))
-					.ToListAsync(cancellationToken);
+				IEnumerable<ShoppingCart> shoppingCarts = await _unitOfWork.Cart.GetAllCartUsersAsync(orderHeader.EcommerceUserId,
+					cancellationToken);
 
 				/* After processing clear the shopping cart */
 				_httpContextAccessor.HttpContext.Session.Clear();
 				if (shoppingCarts.Any())
-					_context.ShoppingCarts.RemoveRange(shoppingCarts);
-				await _context.SaveChangesAsync(cancellationToken);
+					_unitOfWork.Cart.DeleteRange(shoppingCarts);
+				await _unitOfWork.SaveAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 			}
 			catch (Exception ex)
@@ -233,12 +230,12 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 
 		public async Task<IActionResult> Plus(long cartId, CancellationToken cancellationToken)
 		{
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				var cart = await _context.ShoppingCarts.FindAsync(cartId);
-				cart.Count = IncrementCount(cart, 1).Count;
-				await _context.SaveChangesAsync(cancellationToken);
+				var cart = await _unitOfWork.Cart.GetIdAsync(cartId, cancellationToken);
+				cart.Count = _unitOfWork.Cart.IncrementCount(cart, 1).Count;
+				await _unitOfWork.SaveAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 			}
 			catch (Exception ex)
@@ -251,19 +248,18 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		}
 		public async Task<IActionResult> Minus(long cartId, CancellationToken cancellationToken)
 		{
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				var cart = await _context.ShoppingCarts.FindAsync(cartId);
-				if (cart.Count <= 1)
+				var cart = await _unitOfWork.Cart.GetIdAsync(cartId, cancellationToken);
+                if (cart.Count <= 1)
 				{
-					_context.ShoppingCarts.Remove(cart);
-                    var count = _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(cart.EcommerceUserId))
-                    .ToList().Count - 1;
+                    _unitOfWork.Cart.Delete(cart);
+                    var count = _unitOfWork.Cart.GetUserProductCount(cart.EcommerceUserId) - 1;
                     _httpContextAccessor.HttpContext.Session.SetInt32(Constants.SessionCart, count);
                 }
-				cart.Count = DecrementCount(cart, 1).Count;
-				await _context.SaveChangesAsync(cancellationToken);
+				cart.Count = _unitOfWork.Cart.DecrementCount(cart, 1).Count;
+				await _unitOfWork.SaveAsync(cancellationToken);
 				await transaction.CommitAsync(cancellationToken);
 			}
 			catch (Exception ex)
@@ -276,14 +272,13 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 		}
 		public async Task<IActionResult> Remove(long cartId, CancellationToken cancellationToken)
 		{
-			using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+			using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 			try
 			{
-				var cart = await _context.ShoppingCarts.FindAsync(cartId);
-				_context.ShoppingCarts.Remove(cart);
-				await _context.SaveChangesAsync(cancellationToken);
-                var count =  _context.ShoppingCarts.Where(x => x.EcommerceUserId.Equals(cart.EcommerceUserId))
-					.ToList().Count;
+				var cart = await _unitOfWork.Cart.GetIdAsync(cartId, cancellationToken);
+                _unitOfWork.Cart.Delete(cart);
+				await _unitOfWork.SaveAsync(cancellationToken);
+                var count =  _unitOfWork.Cart.GetUserProductCount(cart.EcommerceUserId);
 				_httpContextAccessor.HttpContext.Session.SetInt32(Constants.SessionCart, count);
 
                 await transaction.CommitAsync(cancellationToken);
@@ -296,37 +291,6 @@ namespace EcommerceMVC.Areas.Customer.Controllers
 			}
 			return RedirectToAction("Index");
 		}
-		private static ShoppingCart DecrementCount(ShoppingCart shoppingCart, int count)
-		{
-			shoppingCart.Count -= count;
-			return shoppingCart;
-		}
-		private static ShoppingCart IncrementCount(ShoppingCart shoppingCart, int count)
-		{
-			shoppingCart.Count += count;
-			return shoppingCart;
-		}
 
-		private void UpdateStripePaymentId(long id, string sessionId, string paymentIntentId)
-		{
-			var orders = _context.OrderHeaders.FirstOrDefault(x=>x.Id.Equals(id));
-
-			orders.PaymentDate = DateTimeOffset.UtcNow;
-			orders.SessionId = sessionId;
-			orders.PaymentIntentId = paymentIntentId;
-		}
-
-		private void UpdateStatus(long id, string orderStatus, string? paymentStatus = null)
-		{
-            var orders = _context.OrderHeaders.FirstOrDefault(x => x.Id.Equals(id));
-            if (orders != null)
-			{
-				orders.OrderStatus = orderStatus;
-				if (paymentStatus != null)
-				{
-					orders.PaymentStatus = paymentStatus;
-				}
-			}
-		}
 	}
 }
