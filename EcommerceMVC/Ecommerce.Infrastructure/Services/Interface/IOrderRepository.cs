@@ -21,6 +21,7 @@ namespace Ecommerce.Infrastructure.Services.Interface
 		void UpdateStripePaymentId(long id, string sessionId, string paymentIntentId);
         void UpdateStatus(long id, string orderStatus, string? paymentStatus = null);
         Task AddAsync(OrderHeader order, CancellationToken cancellationToken = default);
+        Task AddOrderDetailAsync(OrderDetail order, CancellationToken cancellationToken = default);
 		void Update(OrderHeader order);
 		void Delete(OrderHeader order);
 	}

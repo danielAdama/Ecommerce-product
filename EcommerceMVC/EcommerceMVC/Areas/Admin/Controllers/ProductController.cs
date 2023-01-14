@@ -18,7 +18,10 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 		private readonly EcommerceDbContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductController(EcommerceDbContext context, IWebHostEnvironment hostEnvironment)
+        public ProductController(
+			EcommerceDbContext context, 
+			IWebHostEnvironment hostEnvironment
+			)
 		{
 			_context = context;
             _hostEnvironment = hostEnvironment;
@@ -91,7 +94,9 @@ namespace EcommerceMVC.Areas.Admin.Controllers
 						await file.CopyToAsync(stream, cancellationToken);
 					}
 
-					var fileStream = System.IO.File.Open(Path.Combine(filePath, $"{fileName}.{fileExt}"), FileMode.Open, FileAccess.Read, FileShare.Read);
+					var fileStream = System.IO.File.Open(
+						Path.Combine(filePath, $"{fileName}.{fileExt}"), FileMode.Open, FileAccess.Read, FileShare.Read
+						);
 				}
 				if (obj.Product.Id != 0)
 				{

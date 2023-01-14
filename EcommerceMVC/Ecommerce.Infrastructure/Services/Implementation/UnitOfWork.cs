@@ -20,10 +20,12 @@ namespace Ecommerce.Infrastructure.Services.Implementation
             Category = new CategoryRepository(_context);
             Company = new CompanyRepository(_context);
             Order = new OrderRepository(_context);
+            Cart = new CartRepository(_context);
         }
         public ICategoryRepository Category { get; private set; }
         public ICompanyRepository Company { get; private set; }
         public IOrderRepository Order { get; private set; }
+        public ICartRepository Cart { get; private set; }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
         {

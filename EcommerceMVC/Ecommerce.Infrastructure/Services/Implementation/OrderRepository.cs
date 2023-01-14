@@ -21,8 +21,11 @@ namespace Ecommerce.Infrastructure.Services.Implementation
 		{
 			await _context.AddAsync(order, cancellationToken);
 		}
-
-		public void Delete(OrderHeader order)
+        public async Task AddOrderDetailAsync(OrderDetail order, CancellationToken cancellationToken = default)
+        {
+            await _context.AddAsync(order, cancellationToken);
+        }
+        public void Delete(OrderHeader order)
 		{
 			_context.Remove(order);
 		}
@@ -33,7 +36,7 @@ namespace Ecommerce.Infrastructure.Services.Implementation
 		}
 		public async Task<IEnumerable<OrderHeader>> GetAllUserOrdersAsync(CancellationToken cancellationToken = default)
 		{
-			return await _context.OrderHeaders.Include(u => u.EcommerceUser).ToListAsync();
+			return await _context.OrderHeaders.Include(u => u.EcommerceUser).ToListAsync(cancellationToken);
 		}
 		public async Task<IEnumerable<OrderHeader>> GetLoggedInUserOrdersAsync(long userId, CancellationToken cancellationToken = default)
 		{
